@@ -1,7 +1,7 @@
 // Initializes the `paynow` service on path `/paynow`
 import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import { Paynow } from './paynow.class';
+import { Paynow, PaynowStatus } from './paynow.class';
 import createModel from '../../models/paynow.model';
 import hooks from './paynow.hooks';
 
@@ -20,6 +20,7 @@ export default function (app: Application): void {
 
   // Initialize our service with any options it requires
   app.use('/paynow', new Paynow(options, app));
+  app.use('/paynow/status-update', new PaynowStatus(options, app));
 
   // Get our initialized service so that we can register hooks
   const service = app.service('paynow');
