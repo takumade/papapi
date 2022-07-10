@@ -6,6 +6,7 @@
     "integrationId": "",
     "integrationKey": "",
     "returnUrl": "",
-    "resultUrl": ""
+    "resultUrl": "",
+    "webhookUrl": ""
   }
 }

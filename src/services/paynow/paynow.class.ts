@@ -2,6 +2,7 @@ import { Params, Paginated, Id } from '@feathersjs/feathers';
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application } from '../../declarations';
 import { generateTransactionId, objectHasKeys } from '../../utils/utils';
+import axios from 'axios'
 
 const { Paynow: PaynowService } = require("paynow");
 
@@ -84,10 +85,6 @@ export class Paynow extends Service {
 
     let paymentMethod = data.phone.startsWith("071") ? "onemoney" :
       data.phone.startsWith("073") ? "telecash" : "ecocash"
-
-    console.log("payment method: ", paymentMethod)
-    console.log("Payment object: ", this.payment)
-    console.log("Paynow Onbject: ", this.paynow)
 
     try {
       let response = await this.paynow.sendMobile(this.payment, data.phone, paymentMethod)
@@ -175,20 +172,42 @@ export class PaynowStatus extends Service {
         if (transaction) {
           let id = transaction.id
 
-          await paynow.update({
+          let response = await paynow.update({
             status: data.status
           }, {
             where: {
               id: id
             }
           })
+
+          let updatedData = await paynow.findByPk(id)
+
+          // Send an update
+          let webhookUrl = this.app.get('paynow').webhookUrl
+
+          if (webhookUrl && webhookUrl.length > 0){
+
+            let webhookData = {
+              origin: 'papapi',
+              type: 'paynow-status-update',
+              data: updatedData,
+            }
+
+            // NOTE: Should await these calls or not?
+            await axios.post(webhookUrl, webhookData)
+          }
+
+          return {
+            'status': 'success',
+            'message': 'Status updated successfully',
+            data: updatedData
+          }
         }
 
+        
 
-        return {
-          'status': 'success',
-          'message': 'Status updated successfully'
-        }
+
+        
       } catch (error: any) {
         return {
           'status': 'error',

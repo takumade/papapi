@@ -11,7 +11,8 @@
     "integrationId": "",
     "integrationKey": "",
     "returnUrl": "",
-    "resultUrl": ""
+    "resultUrl": "",
+    "webhookUrl": ""
   },
   "authentication": {
     "entity": "user",
