@@ -11,7 +11,15 @@ export default function (app: Application): typeof Model {
       type: DataTypes.STRING,
       allowNull: true
     },
+    transactionId: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     invoice: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    paynowReference: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -42,6 +50,10 @@ export default function (app: Application): typeof Model {
     redirectUrl: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    resultUrl: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     pollUrl: {
       type: DataTypes.STRING,

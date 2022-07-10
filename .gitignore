@@ -2,6 +2,9 @@
 logs
 *.log
 
+# Configs
+config/development.json
+
 # Runtime data
 pids
 *.pid

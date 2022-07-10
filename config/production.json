@@ -2,8 +2,9 @@
   "host": "papapi-app.feathersjs.com",
   "port": "PORT",
   "paynow": {
-    "integrationId": "ID HERE",
-    "integerationKey": "KEY HERE",
+    "email": "",
+    "integrationId": "",
+    "integrationKey": "",
     "returnUrl": "",
     "resultUrl": ""
   }

@@ -7,8 +7,9 @@
     "max": 50
   },
   "paynow": {
-    "integrationId": "ID HERE",
-    "integerationKey": "KEY HERE",
+    "email": "",
+    "integrationId": "",
+    "integrationKey": "",
     "returnUrl": "",
     "resultUrl": ""
   },
