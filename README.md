@@ -37,6 +37,22 @@ $ npm install
 
 3. Config your environment variables in `config/default.json` and `config/production.json`
 
+For Paynow look for this object:
+
+```json
+"paynow": {
+    "email": "",
+    "integrationId": "",
+    "integrationKey": "",
+    "returnUrl": "",
+    "resultUrl": "",
+    "webhookUrl": "",
+}
+```
+
+**Note** Dont leave webhookURL empty, If you do so you wont recieve [updates](#recieving-paynow-updates)
+
+
 4. Run the server
 
 ```bash
@@ -76,6 +92,78 @@ Set the `Authorization` header to the token (accessToken) you got from `/authent
     "Authorization": "Bearer <token>"
 }
 ```
+
+# Paynow
+
+To create a payment send a POST to `/paynow` with the following data
+
+```json
+{
+	"email": "<client email>",
+	"phone": "<client-phone>",
+	"items": [
+		{
+			"name": "sadza",
+			"price": 2.02
+		},
+		{
+			"name": "rice",
+			"price": 1.05
+		}
+	]
+}
+
+```
+
+You will get something like this
+
+```json
+{
+	"id": <id>,
+	"email": "<client email>",
+	"items": "[{\"name\":\"sadza\",\"price\":2.02},{\"name\":\"rice\",\"price\":1.05}]",
+	"resultUrl": "<result url>",
+	"invoice": "<invoice-id>",
+	"paynowReference": "14759100",
+	"method": "ecocash",
+	"transactionId": "TRX-1657480260658-31e0e07da354d483",
+	"instructions": "Dial *151*2*4# and enter your EcoCash PIN. Once you have authorized the payment via your handset, please click Check For Payment below to conclude this transaction",
+	"amount": <amount>,
+	"pollUrl": "<poll url>",
+	"status": "Sent",
+	"updatedAt": "2022-07-10T19:11:01.521Z",
+	"createdAt": "2022-07-10T19:11:01.521Z"
+}
+```
+
+## Recieving Paynow Updates
+When the transaction status get updated, Papapi will sent a `POST` request to the url you mention in the `webhookURL` field in the paynow settings.
+
+The data will be something like this:
+
+```json
+{
+    origin: 'papapi',
+    type: 'paynow-status-update',
+    data: {
+        "id": <id>,
+        "email": "<client email>",
+        "items": "[{\"name\":\"sadza\",\"price\":2.02},{\"name\":\"rice\",\"price\":1.05}]",
+        "resultUrl": "<result url>",
+        "invoice": "<invoice-id>",
+        "paynowReference": "14759100",
+        "method": "ecocash",
+        "transactionId": "TRX-1657480260658-31e0e07da354d483",
+        "instructions": "Dial *151*2*4# and enter your EcoCash PIN. Once you have authorized the payment via your handset, please click Check For Payment below to conclude this transaction",
+        "amount": <amount>,
+        "pollUrl": "<poll url>",
+        "status": "Sent",
+        "updatedAt": "2022-07-10T19:11:01.521Z",
+        "createdAt": "2022-07-10T19:11:01.521Z"
+    },
+}
+```
+
 
 
 To be continued...
