@@ -53,6 +53,7 @@
     "feathers-sequelize": "^6.3.4",
     "helmet": "^5.1.0",
     "mysql2": "^2.3.3",
+    "paynow": "^1.0.9",
     "sequelize": "^6.21.2",
     "serve-favicon": "^2.5.0",
     "winston": "^3.8.1"
