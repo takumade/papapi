@@ -7,10 +7,51 @@ import { HookReturn } from 'sequelize/types/hooks';
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
   const paynow = sequelizeClient.define('paynow', {
-    text: {
+    origin: {  // Where it came from
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    invoice: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    instructions: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    method: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },    
+    items:  {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    amount: {
+      type: DataTypes.BIGINT,
+      allowNull: false
+    },
+    redirectUrl: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    pollUrl: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    status: {
       type: DataTypes.STRING,
       allowNull: false
     }
+
   }, {
     hooks: {
       beforeCount(options: any): HookReturn {
