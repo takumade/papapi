@@ -50,13 +50,6 @@ app.configure(authentication);
 app.configure(services);
 // Set up event channels (see channels.ts)
 app.configure(channels);
-// Set up custom method
-app.configure(customMethods({
-  methods: {
-    paynow: ['status']  // allow calling app.service('email').send client side
-  }
-}))
-
 
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());
