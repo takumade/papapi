@@ -15,9 +15,8 @@ Papapi is a simple, fast, and powerful microservice for Paynow, PayPal and Strip
 # Architecture
 Papapi uses a layered architecture
 
-API ----> Services (Paypal, Stripe, Paynow) ----> Database 
+![Papapi Architecture](readme-images/papapi.png)
 
-Diagram coming soon
 
 # Installation
 
