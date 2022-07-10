@@ -1,7 +1,7 @@
-import { Params, Paginated } from '@feathersjs/feathers';
+import { Params, Paginated, Id } from '@feathersjs/feathers';
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application } from '../../declarations';
-import { objectHasKeys } from '../../utils/utils';
+import { generateTransactionId, objectHasKeys } from '../../utils/utils';
 
 const { Paynow: PaynowService } = require("paynow");
 
@@ -25,18 +25,27 @@ export class Paynow extends Service {
 
     this.paynow.resultUrl = this.paynowSettings.resultUrl
     this.paynow.returnUrl = this.paynowSettings.returnUrl
+    this.paynow.email = this.paynowSettings.email
   }
 
   async find(params?: any) {
     return []
   }
 
+  async update(id: Id, data: any, params?: Params | undefined): Promise<any> {
+
+  }
+
   async create(data: any, params: any) {
+
+
+
+    console.log("Data: ", data)
 
     let checkKeys = [
       'email',
       'phone',
-      ''
+      'items'
     ]
 
     let totalAmount = 0
@@ -47,13 +56,14 @@ export class Paynow extends Service {
     }
 
     // Check if the proper data is supplied
-    if (!objectHasKeys(checkKeys, data)){
+    if (!objectHasKeys(checkKeys, data)) {
       return {
         status: "error",
         message: "Please supply these items: " + checkKeys.join(", ")
       }
     }
 
+    let transactionId = generateTransactionId()
     let invoiceId = "Invoice " + new Date().getTime()
 
 
@@ -66,60 +76,133 @@ export class Paynow extends Service {
         totalAmount += item.price
       })
     } else {
-        return {
-          status: "error",
-          message: "Items should not be empty"
-        }
+      return {
+        status: "error",
+        message: "Items should not be empty"
+      }
     }
 
     let paymentMethod = data.phone.startsWith("071") ? "onemoney" :
-                        data.phone.startsWith("073") ? "telecash" : "ecocash" 
-    
-    try{
+      data.phone.startsWith("073") ? "telecash" : "ecocash"
+
+    console.log("payment method: ", paymentMethod)
+    console.log("Payment object: ", this.payment)
+    console.log("Paynow Onbject: ", this.paynow)
+
+    try {
       let response = await this.paynow.sendMobile(this.payment, data.phone, paymentMethod)
 
+      console.log("Reasponse: ", response)
 
 
-      if(response.success) {
-          let instructions = response.instructions
-          let pollUrl = response.pollUrl; 
-          let status = this.paynow.pollTransaction(pollUrl);
+
+      if (response.success) {
+        let instructions = response.instructions
+        let pollUrl = response.pollUrl;
+        let status = await this.paynow.pollTransaction(pollUrl);
+
+        console.log("Status: ", status)
 
 
-          let newPaynowPayment = {
-            items: JSON.stringify(data.items),
-            returnUrl: this.paynow.returnUrl,
-            invoice: invoiceId,
-            method: paymentMethod,
-            instructions: instructions,
-            amount: totalAmount,
-            pollUrl: pollUrl,
-            status: status.paid() ? "paid" : "pending"
-          }
+        let newPaynowPayment = {
+          email: data.email,
+          phone: data?.phone,
+          items: JSON.stringify(data.items),
+          resultUrl: this.paynow.resultUrl,
+          invoice: status.reference,
+          paynowReference: status.paynowReference,
+          method: paymentMethod,
+          transactionId: transactionId,
+          instructions: instructions,
+          amount: totalAmount,
+          pollUrl: pollUrl,
+          status: status.status
+        }
 
-          // save data
-          super.create(newPaynowPayment)
+        console.log("Paynow Payment: ", newPaynowPayment)
 
-          return {
-            status: "success",
-            message: "Payment successfully created",
-            data: newPaynowPayment
-          }
+        return super.create(newPaynowPayment)
       } else {
-          console.log(response.error)
-          return {
-            status: "error",
-            message: "Response Error",
-            error: response.error
-          }
+        console.log(response.error)
+        return {
+          status: "error",
+          message: "Response Error",
+          error: response.error
+        }
       }
-    }catch(error: any ){
+    } catch (error: any) {
+      console.log(error)
       return {
         status: "error",
         message: "There is some error somewhere",
         error: error
       }
-    }    
+    }
   }
+
+}
+
+
+export class PaynowStatus extends Service {
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
+  app: Application
+
+  constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
+    super(options);
+    this.app = app
+  }
+
+  async create(data: any, params?: any): Promise<any> {
+
+    if (objectHasKeys(['reference', 'paynowreference', 'pollurl'], data)) {
+
+      try {
+        console.log("Paynow Data: ", data)
+        const sequelize = this.app.get('sequelizeClient');
+        const { paynow } = sequelize.models
+        console.log("models: ", sequelize.models);
+
+
+        let transaction = await paynow.findOne({
+          where: {
+            paynowReference: data.paynowreference,
+            invoice: data.reference
+          }
+        })
+
+        console.log("Transaction: ", transaction)
+
+        if (transaction) {
+          let id = transaction.id
+
+          await paynow.update({
+            status: data.status
+          }, {
+            where: {
+              id: id
+            }
+          })
+        }
+
+
+        return {
+          'status': 'success',
+          'message': 'Status updated successfully'
+        }
+      } catch (error: any) {
+        return {
+          'status': 'error',
+          'message': 'The status wasnt updated successfully',
+          error: error
+        }
+      }
+
+
+    }
+
+
+
+  }
+
 
 }
