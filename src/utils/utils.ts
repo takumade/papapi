@@ -1,4 +1,5 @@
 
+import crypto from 'crypto';
 
 
 export const objectHasKeys = (keys: any[], object: {}) => {
@@ -13,4 +14,8 @@ export const objectHasKeys = (keys: any[], object: {}) => {
     })
 
     return status
+}
+
+export const generateTransactionId = () => {
+    return "TRX-"+new Date().getTime()+"-"+crypto.randomBytes(8).toString('hex')
 }
