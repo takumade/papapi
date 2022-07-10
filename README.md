@@ -1,6 +1,12 @@
 # Papapi
 
-Papai is a simple, fast, and powerful microservice for Paynow, PayPal and Stripe(To come) payments.
+Papapi is a simple, fast, and powerful microservice for Paynow, PayPal and Stripe payments.
+
+# Supported payment methods
+1. Paynow ✅
+2. PayPal ❌
+3. Stripe ❌
+
 
 # Installation
 
@@ -18,11 +24,47 @@ $ npm install
 ```
 **Note:** You can use yarn or the new bun. If something breaks with the bun, you are on your own.
 
-3. Config your environment variables in `.env`
+3. Config your environment variables in `config/default.json` and `config/production.json`
 
+4. Run the server
+
+```bash
+$ npm run start
 ```
-PAYNOW_INTEGRATION_ID=<your integration id>
-PAYNOW_SECRET_KEY=<your secret key>
+
+## Add a user
+
+Send a POST request to `/users` with the following data:
+
+```json
+{
+  "name": "John Doe",
+  "email": "johndoe@email.com",
+  "password": "password"
+}
 ```
+
+## Get a token
+
+Send a POST request to `/authentication` with the following data:
+    
+```json
+{
+    "stratgey": "password",
+    "email": "johndoe@email.com",
+    "password": "password"
+}
+```
+
+## Making authenticated requests
+
+Set the `Authorization` header to the token (accessToken) you got from `/authentication`
+
+```json
+{
+    "Authorization": "Bearer <token>"
+}
+```
+
 
 To be continued...
