@@ -5,7 +5,8 @@ export default function (app: Application): void {
   const connectionString = app.get('mysql');
   const sequelize = new Sequelize(connectionString, {
     dialect: 'mysql',
-    logging: false,
+    logging: true,
+    sync: { force: true },
     define: {
       freezeTableName: true
     }
