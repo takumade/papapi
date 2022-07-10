@@ -7,6 +7,17 @@ Papapi is a simple, fast, and powerful microservice for Paynow, PayPal and Strip
 2. PayPal ❌
 3. Stripe ❌
 
+# Tech Stack
+1. Feathers JS (https://docs.feathersjs.com/)
+2. Sequelize (https://sequelize.org/)
+3. MariaDB
+
+# Architecture
+Papapi uses a layered architecture
+
+API ----> Services (Paypal, Stripe, Paynow) ----> Database 
+
+Diagram coming soon
 
 # Installation
 
