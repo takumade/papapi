@@ -159,9 +159,9 @@ The data will be something like this:
 
 ```json
 {
-    origin: 'papapi',
-    type: 'paynow-status-update',
-    data: {
+    "origin": "papapi",
+    "type": "paynow-status-update",
+    "data": {
         "id": 23,
         "email": "<client email>",
         "items": "[{\"name\":\"sadza\",\"price\":2.02},{\"name\":\"rice\",\"price\":1.05}]",
