@@ -12,6 +12,9 @@ Papapi is a simple, fast, and powerful microservice for Paynow, PayPal and Strip
     - [Making authenticated requests](#making-authenticated-requests)
 5. [Paynow](#paynow)
     - [Recieving Paynow Updates](#recieving-paynow-updates)
+6. [Contributing](#contributing)
+7. [Special Thanks To](#special-thanks-to)
+8. [Sponsorship](#sponsorship)
    
 
 
@@ -176,6 +179,18 @@ The data will be something like this:
     },
 }
 ```
+
+# Contributing
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+
+# Special Thanks To
+1. [iamngoni](https://github.com/iamngoni) - Papapi uses his version of paynow sdk
+
+# Sponsorship
+If you love Papapi, you can really help us by sponsoring us.
+
+
 
 
 
