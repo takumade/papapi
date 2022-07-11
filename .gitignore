@@ -111,5 +111,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # Others
-lib/
+# lib/
 data/
