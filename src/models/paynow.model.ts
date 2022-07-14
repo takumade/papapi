@@ -55,6 +55,10 @@ export default function (app: Application): typeof Model {
       type: DataTypes.STRING,
       allowNull: false
     },
+    linkUrl: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     pollUrl: {
       type: DataTypes.STRING,
       allowNull: true

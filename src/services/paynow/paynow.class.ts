@@ -96,6 +96,7 @@ export class Paynow extends Service {
       if (response.success) {
         let instructions = response.instructions
         let pollUrl = response.pollUrl;
+        let linkUrl = response?.linkUrl;
         let status = await this.paynow.pollTransaction(pollUrl);
 
         console.log("Status: ", status)
@@ -112,6 +113,7 @@ export class Paynow extends Service {
           transactionId: transactionId,
           instructions: instructions,
           amount: totalAmount,
+          linkUr: linkUrl,
           pollUrl: pollUrl,
           status: status.status
         }

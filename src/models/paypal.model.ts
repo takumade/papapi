@@ -7,7 +7,47 @@ import { HookReturn } from 'sequelize/types/hooks';
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
   const paypal = sequelizeClient.define('paypal', {
-    text: {
+    origin: {  // Where it came from
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    transactionId: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    paymentId: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    invoice: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    currency: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    method: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },    
+    items:  {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    amount: {
+      type: DataTypes.BIGINT,
+      allowNull: false
+    },
+    paypalUrl: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    status: {
       type: DataTypes.STRING,
       allowNull: false
     }

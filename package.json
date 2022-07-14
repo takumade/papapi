@@ -54,7 +54,9 @@
     "feathers-sequelize": "^6.3.4",
     "helmet": "^5.1.0",
     "mysql2": "^2.3.3",
+    "node-fetch": "^3.2.8",
     "paynow": "git+https://github.com/iamngoni/Paynow-NodeJS-SDK.git",
+    "paypal-rest-sdk": "^1.8.1",
     "sequelize": "^6.21.2",
     "serve-favicon": "^2.5.0",
     "winston": "^3.8.1"

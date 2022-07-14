@@ -1,7 +1,7 @@
 // Initializes the `paypal` service on path `/paypal`
 import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import { Paypal } from './paypal.class';
+import { Paypal,  } from './paypal.class';
 import createModel from '../../models/paypal.model';
 import hooks from './paypal.hooks';
 
@@ -19,7 +19,10 @@ export default function (app: Application): void {
   };
 
   // Initialize our service with any options it requires
-  app.use('/paypal', new Paypal(options, app));
+  let paypalService = new Paypal(options, app)
+  app.use('/paypal', paypalService);
+  app.get('/paypal-success', paypalService.success);
+  // app.use('/paypal-cancel', new PaypalCancel(options, app));
 
   // Get our initialized service so that we can register hooks
   const service = app.service('paypal');
