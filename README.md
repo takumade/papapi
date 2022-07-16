@@ -1,6 +1,6 @@
 # Papapi
 
-Papapi is a simple, fast, and powerful microservice for Paynow, PayPal and Stripe payments.
+Papapi is a simple, fast, and powerful microservice for **Paynow, PayPal and Stripe** payments.
 
 # Table of contents
 1. [Supported Method](#supported-payment-methods)
@@ -181,6 +181,12 @@ The data will be something like this:
 ```
 
 # Contributing
+My plan is to add the 3 gateways and document them well. Other gateways will be added in future versions. Or If you are stubborn and want to add a new gateway now, please contact me but make sure it doesnt do the same thing as the other gateways.
+
+The last thing I want is end up with a very huge repo with a lot of gateways that does the same thing.
+
+Papapi should be simple and stupid. It should be very good at what it does.
+
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 
@@ -191,7 +197,41 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 If you love Papapi, you can really help us by sponsoring us.
 
 
+# Todo
 
+## Features
+- [ ] Address authentication
+- [ ] Remove nodemon and uneeded code
+- [ ] Clean paynow
+- [x] Add paynow mobile
+- [ ] Add paynow web
+- [ ] Add paypal standard
+- [ ] Add paypal advanced
+- [ ] Add stripe
 
+## Testing
+- [ ] Test stripe
+- [x] Test paynow mobile
+- [ ] Test paypal advanced
+- [ ] Test paynow web
+- [ ] Test paypal standard
+
+## Documentation
+- [ ] Add paypal example docs
+- [ ] Add paypal standard example docs
+- [ ] Add paypal advanced example docs
+- [ ] Add stripe example docs
+- [ ] Add paypal config docs
+- [ ] Add paynow config docs
+- [ ] Add stripe config docs
+
+## Quality Assurance
+- [ ] Write tests for paypal standard
+- [ ] Write tests for paypal advanced
+- [ ] Write tests for stripe
+- [ ] Write tests for paynow mobile
+- [ ] Write tests for paynow web
+
+ 
 
 To be continued...

@@ -1,7 +1,7 @@
 {
   "name": "papapi",
   "description": "Is a payment microservice for Paynow, Paypal and Stripe",
-  "version": "0.0.0",
+  "version": "0.2.1",
   "homepage": "",
   "private": true,
   "main": "src",
@@ -26,7 +26,7 @@
   "scripts": {
     "test": "npm run lint && npm run compile && npm run mocha",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
-    "dev": "ts-node-dev --no-notify src/",
+    "dev": "ts-node-dev src/",
     "start": "npm run compile && node lib/",
     "mocha": "mocha --require ts-node/register --require source-map-support/register \"test/**/*.ts\" --recursive --exit",
     "compile": "shx rm -rf lib/ && tsc"
@@ -55,11 +55,14 @@
     "helmet": "^5.1.0",
     "mysql2": "^2.3.3",
     "paynow": "git+https://github.com/iamngoni/Paynow-NodeJS-SDK.git",
+    "paypal-rest-sdk": "^1.8.1",
     "sequelize": "^6.21.2",
     "serve-favicon": "^2.5.0",
     "winston": "^3.8.1"
   },
   "devDependencies": {
+    "@swc/core": "^1.2.215",
+    "@swc/helpers": "^0.4.3",
     "@types/bluebird": "^3.5.36",
     "@types/compression": "^1.7.2",
     "@types/cors": "^2.8.12",
@@ -72,7 +75,10 @@
     "axios": "^0.27.2",
     "eslint": "^8.19.0",
     "mocha": "^10.0.0",
+    "nodemon": "^2.0.19",
+    "regenerator-runtime": "^0.13.9",
     "shx": "^0.3.4",
+    "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.7.4"
   }

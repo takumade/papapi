@@ -1,7 +1,7 @@
 import { Params, Paginated, Id } from '@feathersjs/feathers';
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application } from '../../declarations';
-import { generateTransactionId, objectHasKeys } from '../../utils/utils';
+import { generateTransactionId, objectHasKeys, pushToWebhook } from '../../utils/utils';
 import axios from 'axios'
 
 const { Paynow: PaynowService } = require("paynow");
@@ -96,6 +96,7 @@ export class Paynow extends Service {
       if (response.success) {
         let instructions = response.instructions
         let pollUrl = response.pollUrl;
+        let linkUrl = response?.linkUrl;
         let status = await this.paynow.pollTransaction(pollUrl);
 
         console.log("Status: ", status)
@@ -112,6 +113,7 @@ export class Paynow extends Service {
           transactionId: transactionId,
           instructions: instructions,
           amount: totalAmount,
+          linkUr: linkUrl,
           pollUrl: pollUrl,
           status: status.status
         }
@@ -185,17 +187,13 @@ export class PaynowStatus extends Service {
           // Send an update
           let webhookUrl = this.app.get('paynow').webhookUrl
 
-          if (webhookUrl && webhookUrl.length > 0){
+          pushToWebhook(
+            "papapi",
+            "paynow-status-update",
+            webhookUrl, updatedData
+          )
 
-            let webhookData = {
-              origin: 'papapi',
-              type: 'paynow-status-update',
-              data: updatedData,
-            }
-
-            // NOTE: Should await these calls or not?
-            await axios.post(webhookUrl, webhookData)
-          }
+          
 
           return {
             'status': 'success',
