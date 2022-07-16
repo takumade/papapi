@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <!-- Replace "test" with your own sandbox Business account app client ID -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AUmbsxGSqN5q-yQ0us_4OO-PNmwDJQHwX9EK0z2Zk0P1rLKzlbmc_jfafZ3_VVvH8nBIg2O_rUr58ErN&currency=USD"></script>
+    <!-- Set up a container element for the button -->
+    <div id="paypal-button-container"></div>
+    <script>
+      paypal
+        .Buttons({
+          // Sets up the transaction when a payment button is clicked
+          createOrder: function (data, actions) {
+            return fetch("http://127.0.0.1:3030/paypal/orders", {
+              method: "post",
+              // use the "body" param to optionally pass additional order information
+              // like product ids or amount
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+              "email": "pleroma.dev@gmail.com",
+              "currency": "USD",
+              "description": "Washing Bar soap",
+              "items": [
+                {
+                  "name": "sadza",
+                  "price": 10.00,
+                  "sku": "001",
+                  "currency": "USD",
+                  "quantity": 1
+                },
+                {
+                  "name": "rice",
+                  "price": 2.34,
+                  "sku": "002",
+                  "currency": "USD",
+                  "quantity": 1
+                }
+              ]
+            }),
+            })
+              .then((response) => response.json())
+              .then((order) => order.id);
+          },
+          // Finalize the transaction after payer approval
+          onApprove: function (data, actions) {
+            return fetch(`http://127.0.0.1:3030/paypal/orders/${data.orderID}/capture`, {
+              method: "post",
+            })
+              .then((response) => response.json())
+              .then((orderData) => {
+                // Successful capture! For dev/demo purposes:
+                console.log(
+                  "Capture result",
+                  orderData,
+                  JSON.stringify(orderData, null, 2)
+                );
+                var transaction =
+                  orderData.purchase_units[0].payments.captures[0];
+                alert(
+                  "Transaction " +
+                    transaction.status +
+                    ": " +
+                    transaction.id +
+                    "\n\nSee console for all available details"
+                );
+                // When ready to go live, remove the alert and show a success message within this page. For example:
+                // var element = document.getElementById('paypal-button-container');
+                // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                // Or go to another URL:  actions.redirect('thank_you.html');
+              });
+          },
+        })
+        .render("#paypal-button-container");
+    </script>
+  </body>
+</html>
