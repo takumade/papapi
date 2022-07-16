@@ -1,7 +1,7 @@
 {
   "name": "papapi",
   "description": "Is a payment microservice for Paynow, Paypal and Stripe",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "homepage": "",
   "private": true,
   "main": "src",
