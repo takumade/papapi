@@ -114,7 +114,7 @@ export class Paypal extends Service {
           status: status
         }
 
-        let webhookUrl = this.app.get('paynow').webhookUrl
+        let webhookUrl = this.app.get('paypal').webhookUrl
 
         pushToWebhook(
           "papapi",
