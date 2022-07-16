@@ -21,7 +21,7 @@ Papapi is a simple, fast, and powerful microservice for **Paynow, PayPal and Str
 
 # Supported payment methods
 1. Paynow ✅
-2. PayPal ❌
+2. PayPal ✅
 3. Stripe ❌
 
 # Tech Stack
@@ -205,7 +205,7 @@ If you love Papapi, you can really help us by sponsoring us.
 - [ ] Clean paynow
 - [x] Add paynow mobile
 - [ ] Add paynow web
-- [ ] Add paypal standard
+- [x] Add paypal standard
 - [ ] Add paypal advanced
 - [ ] Add stripe
 
@@ -214,7 +214,7 @@ If you love Papapi, you can really help us by sponsoring us.
 - [x] Test paynow mobile
 - [ ] Test paypal advanced
 - [ ] Test paynow web
-- [ ] Test paypal standard
+- [x] Test paypal standard
 
 ## Documentation
 - [ ] Add paypal example docs
