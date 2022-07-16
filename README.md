@@ -201,8 +201,8 @@ If you love Papapi, you can really help us by sponsoring us.
 
 ## Features
 - [ ] Address authentication
-- [ ] Remove nodemon and uneeded code
-- [ ] Clean paynow
+- [x] Remove nodemon and uneeded code
+- [x] Clean paynow
 - [x] Add paynow mobile
 - [ ] Add paynow web
 - [x] Add paypal standard
