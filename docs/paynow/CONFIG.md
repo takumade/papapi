@@ -14,7 +14,3 @@ For Paynow look for this object:
 ```
 
 **Note** Dont leave webhookURL empty, If you do so you wont recieve updates
-
-
-
-
