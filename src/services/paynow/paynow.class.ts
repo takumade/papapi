@@ -139,33 +139,21 @@ export class Paynow extends Service {
     }
   }
 
-}
+  async statusUpdate(req:any, res:any): Promise<any> {
 
+    let statusData = req.body
 
-export class PaynowStatus extends Service {
-  //eslint-disable-next-line @typescript-eslint/no-unused-vars
-  app: Application
-
-  constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
-    super(options);
-    this.app = app
-  }
-
-  async create(data: any, params?: any): Promise<any> {
-
-    if (objectHasKeys(['reference', 'paynowreference', 'pollurl'], data)) {
+    if (objectHasKeys(['reference', 'paynowreference', 'pollurl'], statusData)) {
 
       try {
-        console.log("Paynow Data: ", data)
+        console.log("Paynow Data: ", statusData)
         const sequelize = this.app.get('sequelizeClient');
         const { paynow } = sequelize.models
-        console.log("models: ", sequelize.models);
-
 
         let transaction = await paynow.findOne({
           where: {
-            paynowReference: data.paynowreference,
-            invoice: data.reference
+            paynowReference: statusData.paynowreference,
+            invoice: statusData.reference
           }
         })
 
@@ -175,7 +163,7 @@ export class PaynowStatus extends Service {
           let id = transaction.id
 
           let response = await paynow.update({
-            status: data.status
+            status: statusData.status
           }, {
             where: {
               id: id
@@ -195,11 +183,11 @@ export class PaynowStatus extends Service {
 
           
 
-          return {
+          res.json({
             'status': 'success',
             'message': 'Status updated successfully',
             data: updatedData
-          }
+          })
         }
 
         
@@ -207,11 +195,11 @@ export class PaynowStatus extends Service {
 
         
       } catch (error: any) {
-        return {
+        res.json({
           'status': 'error',
           'message': 'The status wasnt updated successfully',
           error: error
-        }
+        })
       }
 
 
@@ -223,3 +211,5 @@ export class PaynowStatus extends Service {
 
 
 }
+
+
