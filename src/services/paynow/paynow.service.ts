@@ -20,8 +20,10 @@ export default function (app: Application): void {
 
   // Initialize our service with any options it requires
   let paynowService = new Paynow(options, app)
+
   app.use('/paynow', paynowService);
-  app.use('/paynow/status-update', paynowService.statusUpdate);
+  
+  app.post('/paynow/status-update', paynowService.statusUpdate);
 
   // Get our initialized service so that we can register hooks
   const service = app.service('paynow');

@@ -11,14 +11,15 @@
       "integrationId": "8224",
       "integrationKey": "4b161cf9-9672-482f-9a0f-3f8a6b9ba881",
       "returnUrl": "",
-      "resultUrl": "https://3b18-2c0f-f8f0-14b-0-1489-8942-32a7-3f13.eu.ngrok.io/paynow/status-update",
+      "resultUrl": "https://a552-197-221-253-144.eu.ngrok.io/paynow/status-update",
       "webhookUrl": ""
   },
   "paypal": {
     "clientId": "AUmbsxGSqN5q-yQ0us_4OO-PNmwDJQHwX9EK0z2Zk0P1rLKzlbmc_jfafZ3_VVvH8nBIg2O_rUr58ErN",
     "clientSecret": "EIZLpO1p0nqNeFhAroDyAx8B2luYyK3N4fqgrxcdVfEMOhf8iwHGXktYvJO4uWGsfaIamWlJ79QLzJr5",
     "returnUrl": "https://5d06-2c0f-f8f0-14b-0-1489-8942-32a7-3f13.eu.ngrok.io/paypal-success",
-    "cancelUrl": "https://5d06-2c0f-f8f0-14b-0-1489-8942-32a7-3f13.eu.ngrok.io/paypal-cancel"
+    "cancelUrl": "https://5d06-2c0f-f8f0-14b-0-1489-8942-32a7-3f13.eu.ngrok.io/paypal-cancel",
+    "webhookUrl": ""
   },
   "authentication": {
     "entity": "user",

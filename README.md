@@ -15,7 +15,7 @@ Papapi is a simple, fast, and powerful microservice for **Paynow, PayPal and Str
     - [Configuration](https://github.com/takumade/papapi/blob/main/docs/paynow/CONFIG.md)
     - [Payments](https://github.com/takumade/papapi/blob/main/docs/paynow/PAYMENTS.md)
     - [Webhooks](https://github.com/takumade/papapi/blob/main/docs/paynow/WEBHOOKS.md)
-6. [PayPal](#paypal)
+6. [PayPal](#)
     - [Configuration](https://github.com/takumade/papapi/blob/main/docs/paypal/CONFIG.md)
     - [Payments](https://github.com/takumade/papapi/blob/main/docs/paypal/PAYMENTS.md)
     - [Webhooks](https://github.com/takumade/papapi/blob/main/docs/paypal/WEBHOOKS.md)
