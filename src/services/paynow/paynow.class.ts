@@ -29,13 +29,7 @@ export class Paynow extends Service {
     this.paynow.email = this.paynowSettings.email
   }
 
-  async find(params?: any) {
-    return []
-  }
-
-  async update(id: Id, data: any, params?: Params | undefined): Promise<any> {
-
-  }
+ 
 
   async create(data: any, params: any) {
 
@@ -139,7 +133,8 @@ export class Paynow extends Service {
     }
   }
 
-  async statusUpdate(req:any, res:any): Promise<any> {
+  statusUpdate = async (req:any, res:any) => {
+    console.log("Status Update: ", req.body)
 
     let statusData = req.body
 
@@ -157,7 +152,7 @@ export class Paynow extends Service {
           }
         })
 
-        console.log("Transaction: ", transaction)
+    
 
         if (transaction) {
           let id = transaction.id
@@ -198,7 +193,7 @@ export class Paynow extends Service {
         res.json({
           'status': 'error',
           'message': 'The status wasnt updated successfully',
-          error: error
+          error: error.message
         })
       }
 

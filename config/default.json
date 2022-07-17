@@ -11,7 +11,7 @@
       "integrationId": "8224",
       "integrationKey": "4b161cf9-9672-482f-9a0f-3f8a6b9ba881",
       "returnUrl": "",
-      "resultUrl": "https://3b18-2c0f-f8f0-14b-0-1489-8942-32a7-3f13.eu.ngrok.io/paynow/status-update",
+      "resultUrl": "https://a552-197-221-253-144.eu.ngrok.io/paynow/status-update",
       "webhookUrl": ""
   },
   "paypal": {
