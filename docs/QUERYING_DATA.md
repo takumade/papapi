@@ -13,8 +13,5 @@ To retrieve transaction please use the following endpoints:
 3. Stripe
 `GET` /stripe
 
-You can also perform READ, UPDATE and DELETE operations on those endpoints. Please secure them if you must.
-
-
 
 For more about querying stuff please visit Feathers JS [docs](https://docs.feathersjs.com)

@@ -6,10 +6,10 @@ For PayPal look for this object:
 "paypal": {
     "clientId": "",
     "clientSecret": "",
-    "returnUrl": "",
-    "cancelUrl": "",
     "webhookUrl": ""
 }
 ```
+
+Get your clientID and clientSecret from PayPal and fill them here.
 
 **Note** Dont leave webhookURL empty, If you do so you wont recieve updates

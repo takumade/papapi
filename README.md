@@ -22,6 +22,7 @@ Papapi is a simple, fast, and powerful microservice for **Paynow, PayPal and Str
 7. [Contributing](#contributing)
 8. [Special Thanks To](#special-thanks-to)
 9. [Sponsorship](#sponsorship)
+10. [Question and Answer](#question-and-answer)
    
 
 
@@ -56,7 +57,6 @@ $ git clone https://github.com/takumade/papapi
 $ cd papapi
 $ npm install
 ```
-**Note:** You can use yarn or the new bun. If something breaks with the bun, you are on your own.
 
 3. Config your environment variables in `config/default.json` and `config/production.json`
 
@@ -131,6 +131,7 @@ If you love Papapi, you can really help us by sponsoring us.
 - [x] Add paypal standard
 - [ ] Add paypal advanced
 - [ ] Add stripe
+- [ ] Dockerize app
 
 ## Testing
 - [ ] Test stripe
@@ -140,12 +141,12 @@ If you love Papapi, you can really help us by sponsoring us.
 - [x] Test paypal standard
 
 ## Documentation
-- [ ] Add paypal example docs
-- [ ] Add paypal standard example docs
+- [x] Add paypal example docs
+- [x] Add paypal standard example docs
 - [ ] Add paypal advanced example docs
 - [ ] Add stripe example docs
-- [ ] Add paypal config docs
-- [ ] Add paynow config docs
+- [x] Add paypal config docs
+- [x] Add paynow config docs
 - [ ] Add stripe config docs
 
 ## Quality Assurance
