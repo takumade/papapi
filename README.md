@@ -84,7 +84,7 @@ Send a POST request to `/authentication` with the following data:
     
 ```json
 {
-    "stratgey": "password",
+    "strategy": "password",
     "email": "johndoe@email.com",
     "password": "password"
 }
