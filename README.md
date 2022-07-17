@@ -2,6 +2,9 @@
 
 Papapi is a simple, fast, and powerful microservice for **Paynow, PayPal and Stripe** payments.
 
+Think of it a box that is just responsible for handling payments. You can query the transactions, create new ones, and so on. You can get webhooks for PayPal, Stripe, and Paynow status updates.
+
+
 # Table of contents
 1. [Supported Method](#supported-payment-methods)
 2. [Tech Stack](#tech-stack)
