@@ -37,7 +37,7 @@ Think of it a box that is just responsible for handling payments. You can query 
 # Supported payment methods
 1. Paynow ✅
 2. PayPal ✅
-3. Stripe ❌
+3. Stripe ✅
 
 # Tech Stack
 1. Feathers JS (https://docs.feathersjs.com/)
@@ -141,7 +141,7 @@ If you love Papapi, you can really help us by sponsoring us.
 - [ ] Dockerize app
 
 ## Testing
-- [ ] Test stripe
+- [x] Test stripe
 - [x] Test paynow mobile
 - [ ] Test paypal advanced
 - [ ] Test paynow web
@@ -151,10 +151,10 @@ If you love Papapi, you can really help us by sponsoring us.
 - [x] Add paypal example docs
 - [x] Add paypal standard example docs
 - [ ] Add paypal advanced example docs
-- [ ] Add stripe example docs
+- [x] Add stripe example docs
 - [x] Add paypal config docs
 - [x] Add paynow config docs
-- [ ] Add stripe config docs
+- [x] Add stripe config docs
 
 ## Quality Assurance
 - [ ] Write tests for paypal standard
