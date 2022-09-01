@@ -42,7 +42,8 @@ export class StripeService extends Service {
 
   createPayment = async (req:any, res:any) => {
     
-    let domain = req.body.domain
+    let successUrl = req.body.success_url
+    let cancelUrl = req.body.cancel_url
     let items = req.body.items
     let lineItems: any[] = []
 
@@ -66,8 +67,8 @@ export class StripeService extends Service {
         payment_method_types: ["card"],
         line_items: lineItems,
         mode: "payment",
-        success_url: `${domain}/success.html`,
-        cancel_url: `${domain}/cancel.html`,
+        success_url: successUrl,
+        cancel_url: cancelUrl,
     });
 
     res.json({ 

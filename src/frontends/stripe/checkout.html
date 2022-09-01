@@ -29,12 +29,16 @@
         headers: {'Content-Type': 'application/json'},
         method: "POST",
         body: JSON.stringify({
-            "product": {
+            "success_url": "url_here",
+            "cancel_url": "url_here",
+            "items": [
+            {
                 "name": "iPhone 12", 
                 "image": "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-purple-select-2021?wid=470&hei=556&fmt=jpeg&qlt=95&.v=1617130317000", 
                 "price": 100,
                 "quantity": 1
-            }})
+            }
+            ]})
       })
         .then(function (response) {
           return response.json();
