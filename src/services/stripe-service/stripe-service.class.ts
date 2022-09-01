@@ -6,11 +6,19 @@ export class StripeService extends Service {
   stripeSettings: any
   app: Application
   stripe: Stripe
+  successUrl: string
+  cancelUrl: string 
+  webhookUrl: string
+
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
     super(options);
     this.app = app
     this.stripeSettings = this.app.get('stripe')
+    this.successUrl = this.stripeSettings.successUrl
+    this.cancelUrl = this.stripeSettings.cancelUrl
+    this.webhookUrl = this.stripeSettings.webhookUrl
+
     this.stripe = new Stripe(this.stripeSettings.secretKey)
   }
 
@@ -42,8 +50,12 @@ export class StripeService extends Service {
 
   createPayment = async (req:any, res:any) => {
     
-    let successUrl = req.body.success_url
-    let cancelUrl = req.body.cancel_url
+    if (this.successUrl == "")
+        this.successUrl = req.body.success_url
+    
+    if (this.cancelUrl == "")
+        this.cancelUrl = req.body.cancel_url
+
     let items = req.body.items
     let lineItems: any[] = []
 
@@ -67,8 +79,8 @@ export class StripeService extends Service {
         payment_method_types: ["card"],
         line_items: lineItems,
         mode: "payment",
-        success_url: successUrl,
-        cancel_url: cancelUrl,
+        success_url: this.successUrl,
+        cancel_url: this.cancelUrl,
     });
 
     res.json({ 
