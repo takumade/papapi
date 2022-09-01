@@ -40,5 +40,40 @@ export class StripeService extends Service {
     }
   }
 
-  
+  createPayment = async (req:any, res:any) => {
+    
+    let domain = req.body.domain
+    let items = req.body.items
+    let lineItems: any[] = []
+
+    for (let item of items){
+        lineItems.push({
+          price_data: {
+              currency: "inr",
+              product_data: {
+                  name: item.name,
+                  images: [item.image],
+              },
+              unit_amount: item.price * 100,
+          },
+          quantity: item.quantity,
+      })
+    }
+
+
+
+    const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: lineItems,
+        mode: "payment",
+        success_url: `${domain}/success.html`,
+        cancel_url: `${domain}/cancel.html`,
+    });
+
+    res.json({ 
+      status: "Success",
+      message: "Session created successfully!",
+      data: session 
+    });
+  }
 }
