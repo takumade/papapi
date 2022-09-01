@@ -8,5 +8,19 @@
     "returnUrl": "",
     "resultUrl": "",
     "webhookUrl": ""
+  },
+  "paypal": {
+    "clientId": "",
+    "clientSecret": "",
+    "returnUrl": "",
+    "cancelUrl": "",
+    "webhookUrl": ""
+  },
+  "stripe": {
+    "publishableKey": "",
+    "secretKey": "",
+    "successUrl": "",
+    "cancelUrl": "",
+    "webhookUrl": ""
   }
 }
