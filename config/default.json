@@ -50,5 +50,5 @@
       "passwordField": "password"
     }
   },
-  "mysql": "mysql://micro:password@localhost:3306/papapi"
+  "mysql": "mysql://papapi:password@localhost:3306/papapi"
 }
