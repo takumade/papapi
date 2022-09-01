@@ -9,23 +9,23 @@ import { generateTransactionId, pushToWebhook } from '../../utils/utils';
 export class Paypal extends Service {
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-  paypalSettings: any
-  app: Application
-  returnUrl: string
-  cancelUrl: string
-  paypal: PayPalStandard
+  paypalSettings: any;
+  app: Application;
+  returnUrl: string;
+  cancelUrl: string;
+  paypal: PayPalStandard;
 
   constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
     super(options);
-    this.app = app
+    this.app = app;
 
-    this.paypalSettings = this.app.get('paypal')
-    this.returnUrl = this.paypalSettings.returnUrl
-    this.cancelUrl = this.paypalSettings.cancelUrl
+    this.paypalSettings = this.app.get('paypal');
+    this.returnUrl = this.paypalSettings.returnUrl;
+    this.cancelUrl = this.paypalSettings.cancelUrl;
 
     this.paypal = new PayPalStandard(this.paypalSettings.clientId,
       this.paypalSettings.clientSecret,
-      this.paypalSettings.mode)
+      this.paypalSettings.mode);
   }
 
 
@@ -33,13 +33,13 @@ export class Paypal extends Service {
     try {
 
 
-      const { items, description, currency, userId, email } = req.body
+      const { items, description, currency, userId, email } = req.body;
 
-      let total: number = 0.0
+      let total = 0.0;
 
-      let finalItems = items.map((item: { price: number; quantity: number; }) => {
-        let itemTotal = item.price * item.quantity
-        total = total + itemTotal
+      const finalItems = items.map((item: { price: number; quantity: number; }) => {
+        const itemTotal = item.price * item.quantity;
+        total = total + itemTotal;
 
         return {
           ...item,
@@ -53,15 +53,15 @@ export class Paypal extends Service {
               item_total: itemTotal.toFixed(2).toString(),
             }
           }
-        }
-      })
+        };
+      });
 
-      let newOrder: PaypalOrder = {
+      const newOrder: PaypalOrder = {
         items: finalItems,
         desc: description,
         total: total.toString(),
         currency: currency
-      }
+      };
 
       const order = await this.paypal.createOrder(newOrder);
 
@@ -70,19 +70,19 @@ export class Paypal extends Service {
         email: email,
         method: 'paypal - standard',
         transactionId: generateTransactionId(),
-        invoice: "Invoice " + new Date().getTime(),
+        invoice: 'Invoice ' + new Date().getTime(),
         items: JSON.stringify(items),
         amount: total,
         currency: currency,
         description: description,
         status: 'pending'
-      })
+      });
 
       res.json(order);
     } catch (err: any) {
       res.status(500).send(err.message);
     }
-  }
+  };
 
   captureOrder = async (req: any, res: any) => {
     const { orderID } = req.params;
@@ -90,37 +90,37 @@ export class Paypal extends Service {
       const captureData = await this.paypal.capturePayment(orderID);
 
       const sequelize = this.app.get('sequelizeClient');
-      const { paypal } = sequelize.models
+      const { paypal } = sequelize.models;
 
-      let transaction = await paypal.findOne({
+      const transaction = await paypal.findOne({
         where: {
           orderId: orderID
         }
-      })
+      });
 
       if (transaction) {
-        let id = transaction.id
-        let status = captureData.status.toLowerCase()
-        let response = await paypal.update({
+        const id = transaction.id;
+        const status = captureData.status.toLowerCase();
+        const response = await paypal.update({
           status: status,
         }, {
           where: {
             id: id
           }
-        })
+        });
 
-        let updatedData = {
+        const updatedData = {
           ...transaction,
           status: status
-        }
+        };
 
-        let webhookUrl = this.app.get('paypal').webhookUrl
+        const webhookUrl = this.app.get('paypal').webhookUrl;
 
         pushToWebhook(
-          "papapi",
-          "paypal-status-update",
+          'papapi',
+          'paypal-status-update',
           webhookUrl, updatedData
-        )
+        );
 
         res.json(captureData);
       }
@@ -129,7 +129,7 @@ export class Paypal extends Service {
     } catch (err: any) {
       res.status(500).send(err.message);
     }
-  }
+  };
 }
 
 

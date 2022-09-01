@@ -19,11 +19,11 @@ export default function (app: Application): void {
   };
 
   // Initialize our service with any options it requires
-  let paypalService = new Paypal(options, app)
+  const paypalService = new Paypal(options, app);
   app.use('/paypal', paypalService);
 
-  app.post("/paypal/orders", paypalService.createOrder);
-  app.post("/paypal/orders/:orderID/capture",paypalService.captureOrder);
+  app.post('/paypal/orders', paypalService.createOrder);
+  app.post('/paypal/orders/:orderID/capture',paypalService.captureOrder);
 
   // Get our initialized service so that we can register hooks
   const service = app.service('paypal');
