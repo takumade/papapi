@@ -19,7 +19,7 @@ export default function (app: Application): void {
   };
 
   // Initialize our service with any options it requires
-  let paynowService = new Paynow(options, app)
+  const paynowService = new Paynow(options, app);
 
   app.use('/paynow', paynowService);
   

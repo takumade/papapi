@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="Content-Security-Policy" content="allow-same-origin">
     <title>Buy Products</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://js.stripe.com/v3/"></script>
@@ -23,20 +24,26 @@
     // Create an instance of the Stripe object with your publishable API key
     var stripe = Stripe("pk_test_51JMTxeJGAt9lXwT1Mh0Tqzf9ybaC8IYNtel551DKjWveG8vWGCKrSgXncEUCoGiRxKtIlbk0ytxPBuPxrLzAH6Bg00QYsAKr6T");
     var checkoutButton = document.getElementById("btn");
+    var backendEnpoint = 'http://localhost:3030'
+    let successUrl = "http://localhost:3000/transaction_success.html"
+    let cancelUrl = "http://localhost:3000/transaction_cancel.html"
 
     checkoutButton.addEventListener("click", function () {
-      fetch("/stripe/payment", {
+      fetch(`${backendEnpoint}/stripe/payment`, {
         headers: {'Content-Type': 'application/json'},
         method: "POST",
         body: JSON.stringify({
-            "success_url": "url_here",
-            "cancel_url": "url_here",
+            "success_url": successUrl,
+            "cancel_url": cancelUrl,
+            "email": "john@test.com",
+            "phone": "0778236712",
             "items": [
             {
                 "name": "iPhone 12", 
                 "image": "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-purple-select-2021?wid=470&hei=556&fmt=jpeg&qlt=95&.v=1617130317000", 
                 "price": 100,
-                "quantity": 1
+                "quantity": 1,
+                "currency": "usd"
             }
             ]})
       })
@@ -44,8 +51,8 @@
           return response.json();
         })
         .then(function (res) {
-          let session = res.data.session
-          return stripe.redirectToCheckout({ sessionId: session.id });
+          let sessionId = res.data.id
+          return stripe.redirectToCheckout({ sessionId: sessionId });
         })
         .then(function (result) {
           // If redirectToCheckout fails due to a browser or network
