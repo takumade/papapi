@@ -21,6 +21,10 @@
     "cancelUrl": "https://5d06-2c0f-f8f0-14b-0-1489-8942-32a7-3f13.eu.ngrok.io/paypal-cancel",
     "webhookUrl": ""
   },
+  "stripe": {
+    "publishableKey": "pk_test_51JMTxeJGAt9lXwT1Mh0Tqzf9ybaC8IYNtel551DKjWveG8vWGCKrSgXncEUCoGiRxKtIlbk0ytxPBuPxrLzAH6Bg00QYsAKr6T",
+    "secretKey": "sk_test_51JMTxeJGAt9lXwT1vUBZ0afUb9Arvrs5CmCXDgUzn8AWJgvUv21iOxJSeRVqG9GHfAHxHHIOrAE2cVbgY63Jhz7n00pgfynhco"
+  },
   "authentication": {
     "entity": "user",
     "service": "users",

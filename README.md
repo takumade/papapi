@@ -22,6 +22,10 @@ Think of it a box that is just responsible for handling payments. You can query 
     - [Configuration](https://github.com/takumade/papapi/blob/main/docs/paypal/CONFIG.md)
     - [Payments](https://github.com/takumade/papapi/blob/main/docs/paypal/PAYMENTS.md)
     - [Webhooks](https://github.com/takumade/papapi/blob/main/docs/paypal/WEBHOOKS.md)
+7. [Stripe](#)
+    - [Configuration](https://github.com/takumade/papapi/blob/main/docs/stripe/CONFIG.md)
+    - [Payments](https://github.com/takumade/papapi/blob/main/docs/stripe/PAYMENTS.md)
+    - [Webhooks](https://github.com/takumade/papapi/blob/main/docs/stripe/WEBHOOKS.md)
 7. [Contributing](#contributing)
 8. [Special Thanks To](#special-thanks-to)
 9. [Sponsorship](#sponsorship)
@@ -133,7 +137,7 @@ If you love Papapi, you can really help us by sponsoring us.
 - [ ] Add paynow web
 - [x] Add paypal standard
 - [ ] Add paypal advanced
-- [ ] Add stripe
+- [x] Add stripe
 - [ ] Dockerize app
 
 ## Testing

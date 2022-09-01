@@ -1,7 +1,7 @@
 {
   "name": "papapi",
   "description": "Is a payment microservice for Paynow, Paypal and Stripe",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "homepage": "",
   "private": true,
   "main": "src",
@@ -58,6 +58,7 @@
     "paypal-rest-sdk": "^1.8.1",
     "sequelize": "^6.21.2",
     "serve-favicon": "^2.5.0",
+    "stripe": "^10.7.0",
     "winston": "^3.8.1"
   },
   "devDependencies": {
