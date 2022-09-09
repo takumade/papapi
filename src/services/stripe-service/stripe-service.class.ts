@@ -128,4 +128,28 @@ export class StripeService extends Service {
       });
     }
   };
+
+  webhooks  = async (req:any, res:any) => {
+    const sig = req.headers['stripe-signature'];
+    let event: any;
+
+    try {
+      event = this.stripe.webhooks.constructEvent(req.body, sig, this.webhookUrl);
+    } catch (err:any) {
+      console.log('Error: ', err);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the checkout.session.completed event
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+
+      // Fulfill the purchase...
+      
+    }
+
+    // Return a response to acknowledge receipt of the event
+    res.json({received: true});
+
+  };
 }
