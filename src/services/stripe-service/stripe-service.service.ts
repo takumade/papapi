@@ -18,12 +18,13 @@ export default function (app: Application): void {
     paginate: app.get('paginate')
   };
 
-  const stripeService =  new StripeService(options, app)
+  const stripeService =  new StripeService(options, app);
 
   // Initialize our service with any options it requires
   app.use('/stripe-service', stripeService);
-  app.post('/stripe/create-customer', stripeService.createCustomer)
-  app.post('/stripe/payment', stripeService.createPayment)
+  app.post('/stripe/create-customer', stripeService.createCustomer);
+  app.post('/stripe/payment', stripeService.createPayment);
+  app.post('/stripe/webhooks', stripeService.webhooks);
 
   // Get our initialized service so that we can register hooks
   const service = app.service('stripe-service');
