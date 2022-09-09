@@ -130,27 +130,23 @@ If you love Papapi, you can really help us by sponsoring us.
 # Todo
 
 ## Features
-- [ ] Address authentication
 - [x] Remove nodemon and uneeded code
 - [x] Clean paynow
 - [x] Add paynow mobile
-- [ ] Add paynow web
 - [x] Add paypal standard
-- [ ] Add paypal advanced
 - [x] Add stripe
+- [ ] Add stripe webhooks
 - [ ] Dockerize app
 
 ## Testing
 - [x] Test stripe
 - [x] Test paynow mobile
-- [ ] Test paypal advanced
-- [ ] Test paynow web
 - [x] Test paypal standard
+- [ ] Test stripe webhooks
 
 ## Documentation
 - [x] Add paypal example docs
 - [x] Add paypal standard example docs
-- [ ] Add paypal advanced example docs
 - [x] Add stripe example docs
 - [x] Add paypal config docs
 - [x] Add paynow config docs
@@ -158,11 +154,9 @@ If you love Papapi, you can really help us by sponsoring us.
 
 ## Quality Assurance
 - [ ] Write tests for paypal standard
-- [ ] Write tests for paypal advanced
 - [ ] Write tests for stripe
 - [ ] Write tests for paynow mobile
-- [ ] Write tests for paynow web
-
+- [ ] Add tests for stripe standard
  
 
 To be continued...
