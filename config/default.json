@@ -24,9 +24,12 @@
   "stripe": {
     "publishableKey": "pk_test_51JMTxeJGAt9lXwT1Mh0Tqzf9ybaC8IYNtel551DKjWveG8vWGCKrSgXncEUCoGiRxKtIlbk0ytxPBuPxrLzAH6Bg00QYsAKr6T",
     "secretKey": "sk_test_51JMTxeJGAt9lXwT1vUBZ0afUb9Arvrs5CmCXDgUzn8AWJgvUv21iOxJSeRVqG9GHfAHxHHIOrAE2cVbgY63Jhz7n00pgfynhco",
+    "signingSecret": "whsec_pH082eZyu1iTkK3QAjazhS9RXsGg0ykt",
+    "verifyWebhookSignature": true,
     "successUrl": "",
     "cancelUrl": "",
-    "webhookUrl": ""
+    "webhookUrl": "",
+    "apiVersion": "2022-08-01"
   },
   "authentication": {
     "entity": "user",

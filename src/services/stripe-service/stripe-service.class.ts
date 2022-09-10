@@ -1,7 +1,8 @@
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application } from '../../declarations';
 import Stripe from 'stripe';
-import { generateTransactionId } from '../../utils/utils';
+import { generateTransactionId, paymentStatuses, pushToWebhook } from '../../utils/utils';
+import logger from '../../logger';
 
 export class StripeService extends Service {
   stripeSettings: any;
@@ -10,6 +11,7 @@ export class StripeService extends Service {
   successUrl: string;
   cancelUrl: string; 
   webhookUrl: string;
+  signingSecret: string;
 
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
@@ -19,10 +21,13 @@ export class StripeService extends Service {
     this.successUrl = this.stripeSettings.successUrl;
     this.cancelUrl = this.stripeSettings.cancelUrl;
     this.webhookUrl = this.stripeSettings.webhookUrl;
+    this.signingSecret = this.stripeSettings.signingSecret;
 
     this.stripe = new Stripe(this.stripeSettings.secretKey, {
-      apiVersion: '2022-08-01',
+      apiVersion: this.stripeSettings.apiVersion,
     });
+
+
   }
 
   createCustomer = async (req:any, res: any) => {
@@ -103,9 +108,10 @@ export class StripeService extends Service {
         invoice: invoiceId,
         method: 'stripe',
         transactionId: transactionId,
+        sessionId: session.id,
         session: JSON.stringify(session),
         amount: totalAmount,
-        status: 'session_created'
+        status: paymentStatuses.session_created
       };
 
       await super.create(newStripePayment);
@@ -128,4 +134,109 @@ export class StripeService extends Service {
       });
     }
   };
+
+  webhooks  = async (req:any, res:any) => {
+    logger.info('Webhook Recieved! Processing...');
+    const sig = req.headers['stripe-signature'];
+    let event: any;
+
+    try {
+      event = this.stripe.webhooks.constructEvent(req.body, sig, this.signingSecret);
+    } catch (err:any) {
+      console.log('Error: ', err);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+
+    const { sessionId, paymentStatus, status } = this.processEvent(event);
+
+    if (sessionId.length > 0 && paymentStatus.length > 0){
+      await this.updateTransaction(sessionId, status);
+    }
+
+    res.json({received: true});
+
+  };
+
+  updateTransaction = async (sessionId:string, paymentStatus:string) => {
+    const sequelize = this.app.get('sequelizeClient');
+    const { stripe_service } = sequelize.models;
+
+    const transaction = await stripe_service.findOne({
+      where: {
+        sessionId: sessionId
+      }
+    });
+
+    
+
+    if (transaction) {
+      const id = transaction.id;
+
+      await stripe_service.update({
+        status: paymentStatus
+      }, {
+        where: {
+          id: id
+        }
+      });
+
+      const updatedData = await stripe_service.findByPk(id);
+
+      // Send an update
+      const webhookUrl = this.app.get('stripe').webhookUrl;
+
+      logger.info('Pusing data to webhook');
+      pushToWebhook(
+        'papapi',
+        'stripe-status-update',
+        webhookUrl, updatedData
+      );
+        
+    }
+  };
+
+  private processEvent(event: any) {
+    let paymentIntent: any;
+    let sessionId = '';
+    let status = '';
+    let paymentStatus = '';
+
+
+    switch (event.type) {
+    case 'checkout.session.completed':
+      const session = event.data.object;
+      logger.info('Checkout Session Completed: ', session);
+      // Then define and call a function to handle the event checkout.session.completed
+      sessionId = session.id;
+      paymentStatus = session.payment_status;
+
+      if (paymentStatus == 'paid') {
+        status = paymentStatuses.paid;
+      }
+
+
+
+      break;
+    case 'payment_intent.canceled':
+      paymentIntent = event.data.object;
+      logger.info('Payment Intent Payment Canceled: ', paymentIntent);
+      // Then define and call a function to handle the event payment_intent.canceled
+      break;
+    case 'payment_intent.payment_failed':
+      paymentIntent = event.data.object;
+      logger.info('Payment Intent Payment Failed: ', paymentIntent);
+      // Then define and call a function to handle the event payment_intent.payment_failed
+      break;
+    case 'payment_intent.succeeded':
+      paymentIntent = event.data.object;
+      logger.info('Payment Intent Succeeded: ', paymentIntent);
+      // Then define and call a function to handle the event payment_intent.succeeded
+      break;
+      // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+    }
+    return { sessionId, paymentStatus, status };
+  }
 }

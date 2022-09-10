@@ -4,7 +4,7 @@ import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application } from '../../declarations';
 import { PayPalStandard, PaypalOrder } from '../../libraries/paypal-standard';
 import logger from '../../logger';
-import { generateTransactionId, pushToWebhook } from '../../utils/utils';
+import { generateTransactionId, paymentStatuses, pushToWebhook } from '../../utils/utils';
 
 export class Paypal extends Service {
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -75,7 +75,7 @@ export class Paypal extends Service {
         amount: total,
         currency: currency,
         description: description,
-        status: 'pending'
+        status: paymentStatuses.session_created
       });
 
       res.json(order);
@@ -102,7 +102,7 @@ export class Paypal extends Service {
         const id = transaction.id;
         const status = captureData.status.toLowerCase();
         const response = await paypal.update({
-          status: status,
+          status: this.retrievePaynowStatus(status),
         }, {
           where: {
             id: id
@@ -128,6 +128,19 @@ export class Paypal extends Service {
 
     } catch (err: any) {
       res.status(500).send(err.message);
+    }
+  };
+
+  retrievePaynowStatus = (status: string) => {
+    switch (status) {
+    case 'completed':
+      return paymentStatuses.paid;
+    case 'payer_action_required':
+      return paymentStatuses.awaitingPayment;
+    case 'voided':
+      return paymentStatuses.cancelled;
+    default:
+      return paymentStatuses.session_created;
     }
   };
 }

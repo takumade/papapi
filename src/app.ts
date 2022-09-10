@@ -31,7 +31,17 @@ app.use(helmet({
 }));
 app.use(cors());
 app.use(compress());
-app.use(express.json());
+// app.use(express.json());
+
+app.use((req, res, next) => {
+  if (req.originalUrl === '/stripe/webhooks') {
+    next(); // Do nothing with the body because I need it in a raw state.
+  } else {
+    express.json()(req, res, next);  // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
+  }
+});
+
+
 app.use(express.urlencoded({ extended: true }));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder

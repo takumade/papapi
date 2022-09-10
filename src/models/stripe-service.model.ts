@@ -14,6 +14,10 @@ export default function (app: Application): typeof Model {
       autoIncrement: true
 
     },
+    sessionId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     transactionId: {
       type: DataTypes.STRING,
       allowNull: false,
