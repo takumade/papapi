@@ -135,14 +135,15 @@ If you love Papapi, you can really help us by sponsoring us.
 - [x] Add paynow mobile
 - [x] Add paypal standard
 - [x] Add stripe
-- [ ] Add stripe webhooks
+- [x] Add stripe webhooks
 - [ ] Dockerize app
+- [ ] Standardize payment status
 
 ## Testing
 - [x] Test stripe
 - [x] Test paynow mobile
 - [x] Test paypal standard
-- [ ] Test stripe webhooks
+- [x] Test stripe webhooks
 
 ## Documentation
 - [x] Add paypal example docs
