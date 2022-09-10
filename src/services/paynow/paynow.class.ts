@@ -199,15 +199,8 @@ export class Paynow extends Service {
           error: error.message
         });
       }
-
-
     }
-
-
-
   };
-
-
 }
 
 
