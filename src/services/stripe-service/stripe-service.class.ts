@@ -1,7 +1,7 @@
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application } from '../../declarations';
 import Stripe from 'stripe';
-import { generateTransactionId, pushToWebhook } from '../../utils/utils';
+import { generateTransactionId, paymentStatuses, pushToWebhook } from '../../utils/utils';
 import logger from '../../logger';
 
 export class StripeService extends Service {
@@ -111,7 +111,7 @@ export class StripeService extends Service {
         sessionId: session.id,
         session: JSON.stringify(session),
         amount: totalAmount,
-        status: 'session_created'
+        status: paymentStatuses.session_created
       };
 
       await super.create(newStripePayment);
@@ -136,12 +136,9 @@ export class StripeService extends Service {
   };
 
   webhooks  = async (req:any, res:any) => {
+    logger.info('Webhook Recieved! Processing...');
     const sig = req.headers['stripe-signature'];
     let event: any;
-
-    logger.info(this.signingSecret);
-    logger.info(sig);
-    console.log();
 
     try {
       event = this.stripe.webhooks.constructEvent(req.body, sig, this.signingSecret);
@@ -151,7 +148,56 @@ export class StripeService extends Service {
     }
 
 
-    let paymentIntent:any;
+    const { sessionId, paymentStatus, status } = this.processEvent(event);
+
+    if (sessionId.length > 0 && paymentStatus.length > 0){
+      await this.updateTransaction(sessionId, status);
+    }
+
+    res.json({received: true});
+
+  };
+
+  updateTransaction = async (sessionId:string, paymentStatus:string) => {
+    const sequelize = this.app.get('sequelizeClient');
+    const { stripe_service } = sequelize.models;
+
+    const transaction = await stripe_service.findOne({
+      where: {
+        sessionId: sessionId
+      }
+    });
+
+    
+
+    if (transaction) {
+      const id = transaction.id;
+
+      await stripe_service.update({
+        status: paymentStatus
+      }, {
+        where: {
+          id: id
+        }
+      });
+
+      const updatedData = await stripe_service.findByPk(id);
+
+      // Send an update
+      const webhookUrl = this.app.get('stripe').webhookUrl;
+
+      logger.info('Pusing data to webhook');
+      pushToWebhook(
+        'papapi',
+        'stripe-status-update',
+        webhookUrl, updatedData
+      );
+        
+    }
+  };
+
+  private processEvent(event: any) {
+    let paymentIntent: any;
     let sessionId = '';
     let status = '';
     let paymentStatus = '';
@@ -162,11 +208,13 @@ export class StripeService extends Service {
       const session = event.data.object;
       logger.info('Checkout Session Completed: ', session);
       // Then define and call a function to handle the event checkout.session.completed
-
       sessionId = session.id;
-      status = session.status; 
       paymentStatus = session.payment_status;
-      
+
+      if (paymentStatus == 'paid') {
+        status = paymentStatuses.paid;
+      }
+
 
 
       break;
@@ -189,45 +237,6 @@ export class StripeService extends Service {
     default:
       console.log(`Unhandled event type ${event.type}`);
     }
-
-    if (sessionId.length > 0 && paymentStatus.length > 0){
-      const sequelize = this.app.get('sequelizeClient');
-      const { stripe_service } = sequelize.models;
-
-      const transaction = await stripe_service.findOne({
-        where: {
-          sessionId: sessionId
-        }
-      });
-
-    
-
-      if (transaction) {
-        const id = transaction.id;
-
-        const response = await stripe_service.update({
-          status: paymentStatus
-        }, {
-          where: {
-            id: id
-          }
-        });
-
-        const updatedData = await stripe_service.findByPk(id);
-
-        // Send an update
-        const webhookUrl = this.app.get('stripe').webhookUrl;
-
-        pushToWebhook(
-          'papapi',
-          'stripe-status-update',
-          webhookUrl, updatedData
-        );
-        
-      }
-    }
-
-    res.json({received: true});
-
-  };
+    return { sessionId, paymentStatus, status };
+  }
 }

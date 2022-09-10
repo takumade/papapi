@@ -1,10 +1,11 @@
 import { Params, Paginated, Id } from '@feathersjs/feathers';
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application } from '../../declarations';
-import { generateTransactionId, objectHasKeys, pushToWebhook } from '../../utils/utils';
+import { generateTransactionId, objectHasKeys, paymentStatuses, pushToWebhook } from '../../utils/utils';
 import axios from 'axios';
 
 import { Paynow as PaynowService } from 'paynow';
+import logger from '../../logger';
 
 
 
@@ -112,7 +113,7 @@ export class Paynow extends Service {
           amount: totalAmount,
           linkUr: linkUrl,
           pollUrl: pollUrl,
-          status: status.status
+          status: this.retrievePaynowStatus(status.status),
         };
 
         console.log('Paynow Payment: ', newPaynowPayment);
@@ -137,7 +138,7 @@ export class Paynow extends Service {
   }
 
   statusUpdate = async (req:any, res:any) => {
-    console.log('Status Update: ', req.body);
+    logger.info('Status Update: ', req.body);
 
     const statusData = req.body;
 
@@ -160,8 +161,10 @@ export class Paynow extends Service {
         if (transaction) {
           const id = transaction.id;
 
+          const status:string  = this.retrievePaynowStatus(statusData.status);
+
           const response = await paynow.update({
-            status: statusData.status
+            status: status
           }, {
             where: {
               id: id
@@ -201,6 +204,27 @@ export class Paynow extends Service {
       }
     }
   };
+
+  private retrievePaynowStatus(status: string) {
+    if (status === 'Paid') {
+      status = paymentStatuses.paid;
+    } else if (status === 'Cancelled') {
+      status = paymentStatuses.cancelled;
+    } else if (status === 'Delivered') {
+      status = paymentStatuses.delivered;
+    } else if (status === 'Awaiting Delivery') {
+      status = paymentStatuses.awaitingDelivery;
+    } else if (status === 'Awaiting Payment') {
+      status = paymentStatuses.awaitingPayment;
+    } else if (status === 'Failed') {
+      status = paymentStatuses.failed;
+    } else if (status === 'Refunded') {
+      status = paymentStatuses.refunded;
+    } else if (status === 'Disputed') {
+      status = paymentStatuses.disputed;
+    } 
+    return status;
+  }
 }
 
 
