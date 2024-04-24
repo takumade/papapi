@@ -24,6 +24,21 @@ page MainPage {
   component: import { MainPage } from "@src/MainPage"
 }
 
+// API
+api CreatePaynowPayment {
+  fn: import { createPayment } from "@src/apis/paynow",
+  httpRoute: {POST, "/paynow/create-payment"}
+}
+
+api PaynowStatusUpdate {
+  fn: import { statusUpdate } from "@src/apis/paynow",
+  httpRoute: {POST, "/paynow/status-update"}
+}
+
+
+
+
+// ENTITIES
 entity User {=psl
     id       Int    @id @default(autoincrement())
     tasks    Task[]
