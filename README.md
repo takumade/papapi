@@ -33,9 +33,7 @@ Think of it a box that is just responsible for handling payments. You can query 
 3. Stripe ✅
 
 # Tech Stack
-1. Feathers JS (https://docs.feathersjs.com/)
-2. Sequelize (https://sequelize.org/)
-3. MariaDB
+1. WASP (https://wasp-lang.dev/)
 
 # Architecture
 Papapi uses a layered architecture
@@ -55,7 +53,7 @@ $ git clone https://github.com/takumade/papapi
 
 ```bash
 $ cd papapi
-$ npm install
+$ wasp
 ```
 
 3. Config your environment variables in `config/default.json` and `config/production.json`
