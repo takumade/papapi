@@ -10,6 +10,10 @@ page MainPage {
   component: import { MainPage } from "@src/MainPage"
 }
 
+entity User {=psl
+    id       Int    @id @default(autoincrement())
+psl=}
+
 entity Stripe {=psl
   id                Int @id @default(autoincrement())
   sessionId         String
