@@ -1,0 +1,11 @@
+app papapi {
+  wasp: {
+    version: "^0.13.2"
+  },
+  title: "papapi"
+}
+
+route RootRoute { path: "/", to: MainPage }
+page MainPage {
+  component: import { MainPage } from "@src/MainPage"
+}
