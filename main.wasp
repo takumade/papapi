@@ -9,3 +9,32 @@ route RootRoute { path: "/", to: MainPage }
 page MainPage {
   component: import { MainPage } from "@src/MainPage"
 }
+
+entity Stripe {=psl
+  id                Int @id @default(autoincrement())
+  sessionId         String
+  transactionId     String 
+  invoice           String
+  email             String
+  phone             String
+  method            String 
+  items             String 
+  session           String 
+  amount            Int
+  successUrl        String 
+  cancelUrl         String 
+  status            String 
+psl=}
+
+entity Paypal {=psl
+  id                Int @id @default(autoincrement())
+  orderId         String
+  transactionId     String 
+  invoice           String
+  currency          String 
+  email             String
+  method            String 
+  items             String 
+  amount            Int
+  status            String 
+psl=}
