@@ -38,3 +38,27 @@ entity Paypal {=psl
   amount            Int
   status            String 
 psl=}
+
+entity Paynow {=psl
+  id                Int @id @default(autoincrement())
+  transactionId     String 
+  invoice           String
+  paynowReference   String
+  instructions      String
+  email             String
+  phone             String
+  method            String 
+  items             String 
+  amount            Int
+  redirectUrl       String 
+  resultUrl         String
+  linkUrl           String  
+  pollUrl           String  
+  amount            Int
+  status            String 
+psl=}
+
+entity PaynowStatusUpdate {=psl
+  id                Int @id @default(autoincrement())
+  text              String
+psl=}
