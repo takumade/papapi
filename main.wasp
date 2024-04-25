@@ -28,13 +28,19 @@ page MainPage {
 api CreatePaynowPayment {
   fn: import { createPayment } from "@src/apis/paynow",
   entities: [Paynow],
-  httpRoute: {POST, "/paynow/create-payment"}
+  httpRoute: (POST, "/paynow/create-payment")
 }
 
 api PaynowStatusUpdate {
   fn: import { statusUpdate } from "@src/apis/paynow",
   entities: [Paynow],
-  httpRoute: {POST, "/paynow/status-update"}
+  httpRoute: (POST, "/paynow/status-update")
+}
+
+// ACTIONS
+action createPaynowPaymentAction {
+  fn: import {createPayment} from "@src/actions/paynow",
+  entities: [Paynow]
 }
 
 
