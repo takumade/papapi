@@ -1,6 +1,7 @@
 import { Paynow as PaynowService } from 'paynow';
 import { _Paynow } from 'wasp/server/_types';
 import { generateTransactionId, objectHasKeys, paymentStatuses, pushToWebhook } from '../utils/utils';
+import { createPaynowPaymentAction } from 'wasp/server/operations';
 
 
 
@@ -112,7 +113,8 @@ export class Paynow {
 
         console.log('Paynow Payment: ', newPaynowPayment);
 
-        // return await this.paynowEntity.create(newPaynowPayment);
+        // @ts-ignore
+        await createPaynowPaymentAction(newPaynowPayment)
       } else {
         console.log(response.error);
         return {
