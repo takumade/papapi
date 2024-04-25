@@ -10,14 +10,10 @@ export class Paynow {
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   paynow: any;
   payment: any;
-  paynowEntity: _Paynow
 
-  constructor(paynowEntity: any) {
+  constructor() {
 
     // Init Paynow 
-
-    this.paynowEntity = paynowEntity
-
     this.paynow = new PaynowService(
       process.env.PAYNOW_INTEGRATION_ID as string, 
       process.env.PAYNOW_INTEGRATION_KEY as string, 
@@ -30,7 +26,7 @@ export class Paynow {
 
  
 
-  async create(data: any, params: any) {
+  async create(data: any) {
 
 
 
@@ -114,7 +110,15 @@ export class Paynow {
         console.log('Paynow Payment: ', newPaynowPayment);
 
         // @ts-ignore
-        await createPaynowPaymentAction(newPaynowPayment)
+        let payment = await createPaynowPaymentAction(newPaynowPayment)
+
+        return {
+          status: 'success',
+          message: 'Payment created successfully',
+          data: {
+            ...payment
+          }
+        }
       } else {
         console.log(response.error);
         return {
