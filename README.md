@@ -38,7 +38,7 @@ Think of it a box that is just responsible for handling payments. You can query 
 # Architecture
 Papapi uses a layered architecture
 
-![Papapi Architecture](readme-images/papapi.png)
+![Papapi Architecture](public/images/architecture.png)
 
 
 # Installation
