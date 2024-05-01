@@ -71,17 +71,16 @@ $ wasp start
 ```
 
 6. To Start a dev database
-
-If on Linux type this
-
-```sh
-su - takunda
-```
-
-Then: 
    
 ```sh
 wasp db start
+```
+
+
+If you installed docker as root type this before running `wasp db start`
+
+```sh
+su - takunda
 ```
 
 ## Add a user
