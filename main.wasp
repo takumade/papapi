@@ -71,7 +71,7 @@ entity Stripe {=psl
   method            String 
   items             String 
   session           String 
-  amount            Int
+  amount            Float
   successUrl        String 
   cancelUrl         String 
   status            String 
@@ -86,7 +86,7 @@ entity Paypal {=psl
   email             String
   method            String 
   items             String 
-  amount            Int
+  amount            Float
   status            String 
 psl=}
 
@@ -100,7 +100,7 @@ entity Paynow {=psl
   phone             String
   method            String 
   items             String 
-  amount            Int
+  amount            Float
   redirectUrl       String 
   resultUrl         String
   linkUrl           String  
