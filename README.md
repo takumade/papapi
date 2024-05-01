@@ -33,7 +33,7 @@ Think of it a box that is just responsible for handling payments. You can query 
 3. Stripe ✅
 
 # Tech Stack
-1. WASP (https://wasp-lang.dev/)
+1. WASP (https://wasp-lang.dev/) [Requires Node 18 and above]
 
 # Architecture
 Papapi uses a layered architecture
