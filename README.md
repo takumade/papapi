@@ -61,7 +61,21 @@ $ wasp
 4. Run the server
 
 ```bash
-$ npm run start
+$ wasp start
+```
+
+6. To Start a dev database
+
+If on Linux type this
+
+```sh
+su - takunda
+```
+
+Then: 
+   
+```sh
+wasp db start
 ```
 
 ## Add a user
