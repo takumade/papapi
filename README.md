@@ -43,6 +43,12 @@ Papapi uses a layered architecture
 
 # Installation
 
+0. Install WASP
+
+```sh
+curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+```
+
 1. Clone it
 
 ```bash
