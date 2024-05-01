@@ -2,6 +2,7 @@ import { Paynow as PaynowService } from 'paynow';
 import { _Paynow } from 'wasp/server/_types';
 import { generateTransactionId, objectHasKeys, paymentStatuses, pushToWebhook } from '../utils/utils';
 import { createPaynowPaymentAction } from 'wasp/server/operations';
+import { sleep } from 'wasp/server/utils';
 
 
 
@@ -48,7 +49,7 @@ export class Paynow {
     // Check if the proper data is supplied
     if (!objectHasKeys(checkKeys, data)) {
       return {
-        status: 'error',
+        success: false,
         message: 'Please supply these items: ' + checkKeys.join(', ')
       };
     }
@@ -67,7 +68,7 @@ export class Paynow {
       });
     } else {
       return {
-        status: 'error',
+        success: false,
         message: 'Items should not be empty'
       };
     }
@@ -78,17 +79,31 @@ export class Paynow {
     try {
       const response = await this.paynow.sendMobile(this.payment, data.phone, paymentMethod);
 
-      console.log('Reasponse: ', response);
-
+      console.log("Response: ", response)
 
 
       if (response.success) {
         const instructions = response.instructions;
         const pollUrl = response.pollUrl;
         const linkUrl = response?.linkUrl;
-        const status = await this.paynow.pollTransaction(pollUrl);
+        let transaction = await this.paynow.pollTransaction(pollUrl);
+        // let retries = 0
 
-        console.log('Status: ', status);
+        // while (retries <= 3){
+        //   await sleep(4000)
+
+        //   transaction = await this.paynow.pollTransaction(pollUrl);
+
+        //   if (transaction.status == "Paid" || transaction.status == "Cancelled") break          
+        //   retries++
+        // }
+
+        // if (transaction.status == "Paid"){
+        //   // Paid
+        // }else{ 
+        //   // Nope
+        // }
+
 
 
         const newPaynowPayment = {
@@ -96,15 +111,17 @@ export class Paynow {
           phone: data?.phone,
           items: JSON.stringify(data.items),
           resultUrl: this.paynow.resultUrl,
-          invoice: status.reference,
-          paynowReference: status.paynowReference,
+          invoice: transaction.reference,
+          paynowReference: transaction.paynowReference,
           method: paymentMethod,
           transactionId: transactionId,
           instructions: instructions,
           amount: totalAmount,
-          linkUr: linkUrl,
+          linkUrl: linkUrl ? linkUrl : "linkurl.com",
           pollUrl: pollUrl,
-          status: this.retrievePaynowStatus(status.status),
+          status: this.retrievePaynowStatus(transaction.status),
+          redirectUrl: "redirecturl.com",
+
         };
 
         console.log('Paynow Payment: ', newPaynowPayment);
@@ -113,7 +130,7 @@ export class Paynow {
         let payment = await createPaynowPaymentAction(newPaynowPayment)
 
         return {
-          status: 'success',
+          success: true,
           message: 'Payment created successfully',
           data: {
             ...payment
@@ -122,7 +139,7 @@ export class Paynow {
       } else {
         console.log(response.error);
         return {
-          status: 'error',
+          success: false,
           message: 'Response Error',
           error: response.error
         };
@@ -130,7 +147,7 @@ export class Paynow {
     } catch (error: any) {
       console.log(error);
       return {
-        status: 'error',
+        success: false,
         message: 'There is some error somewhere',
         error: error
       };
@@ -197,7 +214,7 @@ export class Paynow {
         }catch (error: any) {
         if (res == null){
           return {
-            status: 'error',
+            success: false,
             message: 'There is some error somewhere',
             error: error
           };
