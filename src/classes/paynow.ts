@@ -78,9 +78,6 @@ export class Paynow {
     try {
       const response = await this.paynow.sendMobile(this.payment, data.phone, paymentMethod);
 
-      console.log('Reasponse: ', response);
-
-
 
       if (response.success) {
         const instructions = response.instructions;
