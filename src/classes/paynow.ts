@@ -99,9 +99,11 @@ export class Paynow {
           transactionId: transactionId,
           instructions: instructions,
           amount: totalAmount,
-          linkUr: linkUrl,
+          linkUrl: linkUrl ? linkUrl : "linkurl.com",
           pollUrl: pollUrl,
           status: this.retrievePaynowStatus(status.status),
+          redirectUrl: "redirecturl.com",
+
         };
 
         console.log('Paynow Payment: ', newPaynowPayment);
