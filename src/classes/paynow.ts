@@ -48,7 +48,7 @@ export class Paynow {
     // Check if the proper data is supplied
     if (!objectHasKeys(checkKeys, data)) {
       return {
-        status: 'error',
+        success: false,
         message: 'Please supply these items: ' + checkKeys.join(', ')
       };
     }
@@ -67,7 +67,7 @@ export class Paynow {
       });
     } else {
       return {
-        status: 'error',
+        success: false,
         message: 'Items should not be empty'
       };
     }
@@ -113,7 +113,7 @@ export class Paynow {
         let payment = await createPaynowPaymentAction(newPaynowPayment)
 
         return {
-          status: 'success',
+          success: true,
           message: 'Payment created successfully',
           data: {
             ...payment
@@ -122,7 +122,7 @@ export class Paynow {
       } else {
         console.log(response.error);
         return {
-          status: 'error',
+          success: false,
           message: 'Response Error',
           error: response.error
         };
@@ -130,7 +130,7 @@ export class Paynow {
     } catch (error: any) {
       console.log(error);
       return {
-        status: 'error',
+        success: false,
         message: 'There is some error somewhere',
         error: error
       };
@@ -197,7 +197,7 @@ export class Paynow {
         }catch (error: any) {
         if (res == null){
           return {
-            status: 'error',
+            success: false,
             message: 'There is some error somewhere',
             error: error
           };
