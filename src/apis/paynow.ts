@@ -6,7 +6,7 @@ export const createPayment = async (req: Request, res: Response, context: any) =
 
     let paynow = new Paynow()
 
-    let response = paynow.create(req.body)
+    let response = await paynow.create(req.body)
 
     // Example of modifying headers to override Wasp default CORS middleware.
     res.json(response);
@@ -17,7 +17,7 @@ export const createPayment = async (req: Request, res: Response, context: any) =
     res.set("Access-Control-Allow-Origin", "*"); // Example of modifying headers to override Wasp default CORS middleware.
 
     let paynow = new Paynow()
-    let response = paynow.statusUpdate(req, res)
+    let response = await paynow.statusUpdate(req, res)
     
     // res.json({ msg: `Hello, ${context.user ? "registered user" : "stranger"}!` });
     res.json(response);
