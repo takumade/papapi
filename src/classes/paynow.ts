@@ -2,6 +2,7 @@ import { Paynow as PaynowService } from 'paynow';
 import { _Paynow } from 'wasp/server/_types';
 import { generateTransactionId, objectHasKeys, paymentStatuses, pushToWebhook } from '../utils/utils';
 import { createPaynowPaymentAction } from 'wasp/server/operations';
+import { sleep } from 'wasp/server/utils';
 
 
 
@@ -78,14 +79,31 @@ export class Paynow {
     try {
       const response = await this.paynow.sendMobile(this.payment, data.phone, paymentMethod);
 
+      console.log("Response: ", response)
+
 
       if (response.success) {
         const instructions = response.instructions;
         const pollUrl = response.pollUrl;
         const linkUrl = response?.linkUrl;
-        const status = await this.paynow.pollTransaction(pollUrl);
+        let transaction = await this.paynow.pollTransaction(pollUrl);
+        // let retries = 0
 
-        console.log('Status: ', status);
+        // while (retries <= 3){
+        //   await sleep(4000)
+
+        //   transaction = await this.paynow.pollTransaction(pollUrl);
+
+        //   if (transaction.status == "Paid" || transaction.status == "Cancelled") break          
+        //   retries++
+        // }
+
+        // if (transaction.status == "Paid"){
+        //   // Paid
+        // }else{ 
+        //   // Nope
+        // }
+
 
 
         const newPaynowPayment = {
@@ -93,15 +111,15 @@ export class Paynow {
           phone: data?.phone,
           items: JSON.stringify(data.items),
           resultUrl: this.paynow.resultUrl,
-          invoice: status.reference,
-          paynowReference: status.paynowReference,
+          invoice: transaction.reference,
+          paynowReference: transaction.paynowReference,
           method: paymentMethod,
           transactionId: transactionId,
           instructions: instructions,
           amount: totalAmount,
           linkUrl: linkUrl ? linkUrl : "linkurl.com",
           pollUrl: pollUrl,
-          status: this.retrievePaynowStatus(status.status),
+          status: this.retrievePaynowStatus(transaction.status),
           redirectUrl: "redirecturl.com",
 
         };
