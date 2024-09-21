@@ -35,7 +35,7 @@ page SignupPage {
 
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
-  component: import { LoginPage } from "@src/LoginPage"
+  component: import { LoginPage } from "@src/pages/LoginPage"
 }
 
 // API
