@@ -146,7 +146,7 @@ If you love Papapi, you can really help us by sponsoring us.
 - [x] Add paypal standard
 - [x] Add stripe
 - [x] Add stripe webhooks
-- [ ] Dockerize app
+- [x] Dockerize app
 - [x] Standardize payment status
 
 ## Testing
