@@ -33,7 +33,11 @@ Think of it a box that is just responsible for handling payments. You can query 
 3. Stripe ✅
 
 # Tech Stack
-1. WASP (https://wasp-lang.dev/) [Requires Node 18 and above]
+1. Hono
+2. Kysely - ORM
+3. Postgres - Database
+4. Axios - Webhooks
+
 
 # Architecture
 Papapi uses a layered architecture
@@ -43,11 +47,6 @@ Papapi uses a layered architecture
 
 # Installation
 
-0. Install WASP
-
-```sh
-curl -sSL https://get.wasp-lang.dev/installer.sh | sh
-```
 
 1. Clone it
 
@@ -59,7 +58,7 @@ $ git clone https://github.com/takumade/papapi
 
 ```bash
 $ cd papapi
-$ wasp
+$ npm i
 ```
 
 3. Config your environment variables in `config/default.json` and `config/production.json`
@@ -67,7 +66,7 @@ $ wasp
 4. Run the server
 
 ```bash
-$ wasp start
+$ npm run dev
 ```
 
 6. To Start a dev database
