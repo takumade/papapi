@@ -1,24 +1,26 @@
-import { Request, Response } from "express";
-import { Paynow } from "../classes/paynow";
 
-export const createPayment = async (req: Request, res: Response, context: any) => {
-    res.set("Access-Control-Allow-Origin", "*"); 
+import { Hono } from "hono"
+import { PaynowLib } from "../lib/paynow";
 
-    let paynow = new Paynow()
-
-    let response = await paynow.create(req.body)
-
-    // Example of modifying headers to override Wasp default CORS middleware.
-    res.json(response);
-  };
+const paynow = new Hono()
 
 
-  export const statusUpdate = async (req: Request, res: Response, context: any) => {
-    res.set("Access-Control-Allow-Origin", "*"); // Example of modifying headers to override Wasp default CORS middleware.
+paynow.post('/create-payment', async (c) => {
 
-    let paynow = new Paynow()
-    let response = await paynow.statusUpdate(req, res)
-    
-    // res.json({ msg: `Hello, ${context.user ? "registered user" : "stranger"}!` });
-    res.json(response);
-  };
+  let paynow = new PaynowLib()
+  const body = await c.req.json()
+  let response = await paynow.create(body)
+
+  return c.json(response)
+})
+
+paynow.post('/status-update', async (c) => {
+  const body = await c.req.json()
+  let paynow = new PaynowLib()
+  let response = await paynow.statusUpdate(body)
+
+  return c.json(response)
+})
+
+  
+export default paynow  

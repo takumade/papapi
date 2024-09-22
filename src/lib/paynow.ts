@@ -1,13 +1,10 @@
-import { Paynow as PaynowService } from 'paynow';
-import { _Paynow } from 'wasp/server/_types';
+
 import { generateTransactionId, objectHasKeys, paymentStatuses, pushToWebhook } from '../utils/utils';
-import { createPaynowPaymentAction } from 'wasp/server/operations';
-import { sleep } from 'wasp/server/utils';
+import { Paynow } from "paynow"
 
 
 
-
-export class Paynow {
+export class PaynowLib {
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   paynow: any;
   payment: any;
@@ -15,7 +12,7 @@ export class Paynow {
   constructor() {
 
     // Init Paynow 
-    this.paynow = new PaynowService(
+    this.paynow = new Paynow(
       process.env.PAYNOW_INTEGRATION_ID as string, 
       process.env.PAYNOW_INTEGRATION_KEY as string, 
       process.env.PAYNOW_INTEGRATION_RESULT_URL as string,
@@ -154,12 +151,9 @@ export class Paynow {
     }
   }
 
-  statusUpdate = async (req:any, res:any) => {
+  statusUpdate = async (status_data: any) => {
 
-    console.log('Chips');
-    
-
-    const statusData = req.body;
+    const statusData = status_data
 
     if (objectHasKeys(['reference', 'paynowreference', 'pollurl'], statusData)) {
 
@@ -206,25 +200,18 @@ export class Paynow {
 
           
 
-          res.json({
-            'status': 'success',
+          return {
+            'status': true,
             'message': 'Status updated successfully',
             // data: updatedData
-          });
+          }
         }catch (error: any) {
-        if (res == null){
-          return {
-            success: false,
-            message: 'There is some error somewhere',
-            error: error
-          };
-        }
 
-        res.json({
-          'status': 'error',
+        return {
+          'status': false,
           'message': 'The status wasnt updated successfully',
           error: error.message
-        });
+        }
       }
     }
   };
