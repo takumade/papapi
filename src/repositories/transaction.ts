@@ -1,57 +1,69 @@
 
 import { db } from '../database'
+import { Paynow, Paypal, Stripe } from '../types'
 
 
-export async function findPersonById(id: number) {
-  return await db.selectFrom('person')
-    .where('id', '=', id)
-    .selectAll()
-    .executeTakeFirst()
+function getTableName(type: string) {
+    let tableName = ''
+    if (type == "stripe")
+        tableName = "stripe"
+    else if (type == "paynow")
+        tableName = "paynow"
+    else if (type == "paypal")
+        tableName = "paypal"
+
+    return tableName
 }
 
-export async function findPeople(criteria: Partial<Person>) {
-  let query = db.selectFrom('person')
+export async function findTransactionById(id: number, type: string) {
 
-  if (criteria.id) {
-    query = query.where('id', '=', criteria.id) // Kysely is immutable, you must re-assign!
-  }
+    let tableName = getTableName(type)
 
-  if (criteria.first_name) {
-    query = query.where('first_name', '=', criteria.first_name)
-  }
-
-  if (criteria.last_name !== undefined) {
-    query = query.where(
-      'last_name',
-      criteria.last_name === null ? 'is' : '=',
-      criteria.last_name
-    )
-  }
-
-  if (criteria.gender) {
-    query = query.where('gender', '=', criteria.gender)
-  }
-
-  if (criteria.created_at) {
-    query = query.where('created_at', '=', criteria.created_at)
-  }
-
-  return await query.selectAll().execute()
+    if (tableName.length > 0)
+        return await db.selectFrom('stripe')
+            .where('id', '=', id)
+            .selectAll()
+            .executeTakeFirst()
 }
 
-export async function updatePerson(id: number, updateWith: PersonUpdate) {
-  await db.updateTable('person').set(updateWith).where('id', '=', id).execute()
+export async function findTransaction(criteria: Partial<Stripe | Paynow | Paypal>, type:string) {
+
+    let tableName:string = getTableName(type)
+
+    // @ts-ignore
+    let query = db.selectFrom(tableName)
+
+    if (criteria.id) {
+        query = query.where('id', '=', criteria.id) // Kysely is immutable, you must re-assign!
+    }
+
+    return await query.selectAll().execute()
 }
 
-export async function createPerson(person: NewPerson) {
-  return await db.insertInto('person')
-    .values(person)
-    .returningAll()
-    .executeTakeFirstOrThrow()
+export async function updateTransaction(id: number, type: string, updateWith: Paypal | Stripe | Paynow) {
+    let tableName:string = getTableName(type)
+    // @ts-ignore
+    await db.updateTable(tableName)
+            .set(updateWith)
+            .where('id', '=', id).execute()
 }
 
-export async function deletePerson(id: number) {
-  return await db.deleteFrom('person').where('id', '=', id)
-    .returningAll()
-    .executeTakeFirst()
+export async function createTransaction(type:string, transaction: Paypal | Stripe | Paynow) {
+
+    let tableName:string = getTableName(type)
+
+    // @ts-ignore
+    return await db.insertInto(tableName)
+        .values(transaction)
+        .returningAll()
+        .executeTakeFirstOrThrow()
+}
+
+export async function deleteTransaction(id: number, type: string) {
+    let tableName:string = getTableName(type)
+
+    // @ts-ignore
+    return await db.deleteFrom(tableName).where('id', '=', id)
+        .returningAll()
+        .executeTakeFirst()
 }
