@@ -81,7 +81,7 @@ import {
     email: string
     phone: string
     method: string
-    items: string
+    items: JSONColumnType<string[]>
     amount: number
     redirect_url: string
     result_url: string
