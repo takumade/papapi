@@ -107,17 +107,17 @@ export class PaynowLib {
           email: data.email,
           phone: data?.phone,
           items: JSON.stringify(data.items),
-          resultUrl: this.paynow.resultUrl,
+          result_url: this.paynow.resultUrl,
           invoice: transaction.reference,
-          paynowReference: transaction.paynowReference,
+          paynow_reference: transaction.paynowReference,
           method: paymentMethod,
-          transactionId: transactionId,
+          transaction_id: transactionId,
           instructions: instructions,
           amount: totalAmount,
-          linkUrl: linkUrl ? linkUrl : "linkurl.com",
-          pollUrl: pollUrl,
+          link_url: linkUrl ? linkUrl : "linkurl.com",
+          poll_url: pollUrl,
           status: this.retrievePaynowStatus(transaction.status),
-          redirectUrl: "redirecturl.com",
+          redirect_url: "redirecturl.com",
 
         };
 
