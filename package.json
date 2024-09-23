@@ -3,12 +3,12 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "migrate": "npx tsx src/database/runMigrations.ts"
-
   },
   "dependencies": {
     "@hono/node-server": "^1.13.1",
     "axios": "^1.4.0",
     "crypto": "^1.0.1",
+    "dotenv": "16.4.5",
     "hono": "^4.6.2",
     "kysely": "^0.27.4",
     "paynow": "git+https://github.com/iamngoni/Paynow-NodeJS-SDK.git",
