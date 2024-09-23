@@ -106,7 +106,7 @@ export class PaynowLib {
         const newPaynowPayment = {
           email: data.email,
           phone: data?.phone,
-          items: JSON.stringify(data.items),
+          items: data.items,
           result_url: this.paynow.resultUrl,
           invoice: transaction.reference,
           paynow_reference: transaction.paynowReference,
