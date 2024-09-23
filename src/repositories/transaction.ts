@@ -5,15 +5,12 @@ import { PaymentMethods, TableNames } from '../utils/constants'
 
 
 function getTableName(type: string) {
-    let tableName = ''
-    if (type == PaymentMethods.Stripe)
-        tableName = TableNames.Stripe
-    else if (type == PaymentMethods.Paynow)
-        tableName = TableNames.Paynow
-    else if (type == PaymentMethods.Paypal)
-        tableName = TableNames.Paypal
 
-    return tableName
+    if (type == PaymentMethods.Stripe) return TableNames.Stripe
+    if (type == PaymentMethods.Paynow) return TableNames.Paynow
+    if (type == PaymentMethods.Paypal) return TableNames.Paypal
+
+    return ''
 }
 
 export async function findTransactionById(id: number, type: string) {
