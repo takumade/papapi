@@ -18,11 +18,16 @@ paynow.post('/create-payment', async (c) => {
 })
 
 paynow.post('/status-update', async (c) => {
-  const body = await c.req.json()
-  let paynow = new PaynowLib()
-  let response = await paynow.statusUpdate(body)
 
-  return c.json(response)
+  try{
+    const body = await c.req.json()
+    let paynow = new PaynowLib()
+    let response = await paynow.statusUpdate(body)
+
+    return c.json(response)
+  }catch(error: any){
+    return c.json({status: false,message: "Cannot process request", error: error.message}, 500)
+  }
 })
 
   
