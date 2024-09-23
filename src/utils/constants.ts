@@ -1,17 +1,27 @@
 
 export enum PaymentStatuses {
-    SessionCreated = 'SESSION_CREATED',
-    Paid = 'PAID',
-    Failed = 'FAILED',
-    Cancelled = 'CANCELLED',
-    Delivered = 'DELIVERED',
-    AwaitingDelivery = 'AWAITING_DELIVERY',
-    AwaitingPayment = 'AWAITING_PAYMENT',
-    Refunded = 'REFUNDED',
-    Disputed = 'DISPUTED'
+    SessionCreated = 'session_created',
+    Paid = 'paid',
+    Failed = 'failed',
+    Cancelled = 'cancelled',
+    Delivered = 'delivered',
+    AwaitingDelivery = 'awaiting_delivery',
+    AwaitingPayment = 'awaiting_payment',
+    Refunded = 'refunded',
+    Disputed = 'disputed',
+    Sent = 'sent'
   }
 
-  
+  export type PaynowStatus = {
+    reference: string;
+    paynowreference: string;
+    amount: string;
+    status: string;
+    pollurl: string;
+    hash: string;
+  };
+
+
   export enum PaymentMethods {
     Stripe = 'STRIPE',
     Paypal = 'PAYPAL',
