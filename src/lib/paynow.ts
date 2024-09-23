@@ -1,6 +1,6 @@
 import { createTransaction } from '../repositories/transaction';
 import { PaymentMethods, PaymentStatuses } from '../utils/constants';
-import { generateTransactionId, objectHasKeys, pushToWebhook, sleep } from '../utils/utils';
+import { generateTransactionId, json, objectHasKeys, pushToWebhook, sleep } from '../utils/utils';
 import { Paynow } from "paynow"
 import { Context } from 'hono';
 
@@ -106,7 +106,7 @@ export class PaynowLib {
         const newPaynowPayment = {
           email: data.email,
           phone: data?.phone,
-          items: data.items,
+          items: json(data.items),
           result_url: this.paynow.resultUrl,
           invoice: transaction.reference,
           paynow_reference: transaction.paynowReference,
