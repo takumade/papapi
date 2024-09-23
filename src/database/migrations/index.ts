@@ -7,15 +7,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('id', 'serial', (col) => col.primaryKey())
     .execute()
 
-  // Create 'task' table
-  await db.schema
-    .createTable('task')
-    .addColumn('id', 'serial', (col) => col.primaryKey())
-    .addColumn('description', 'varchar', (col) => col.notNull())
-    .addColumn('is_done', 'boolean', (col) => col.defaultTo(false).notNull())
-    .addColumn('user_id', 'integer', (col) => col.references('user.id').onDelete('set null'))
-    .execute()
-
   // Create 'stripe' table
   await db.schema
     .createTable('stripe')
@@ -82,6 +73,5 @@ export async function down(db: Kysely<any>): Promise<void> {
   await db.schema.dropTable('paynow').execute()
   await db.schema.dropTable('paypal').execute()
   await db.schema.dropTable('stripe').execute()
-  await db.schema.dropTable('task').execute()
   await db.schema.dropTable('user').execute()
 }
