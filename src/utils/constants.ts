@@ -10,9 +10,14 @@ export const paymentStatuses = {
     disputed: 'DISPUTED'
   };
   
-  export const paymentMethods = {
-    stripe: 'STRIPE',
-    paypal: 'PAYPAL',
-    paynow: 'PAYNOW'
-  };
+  export enum PaymentMethods {
+    Stripe = 'STRIPE',
+    Paypal = 'PAYPAL',
+    Paynow = 'PAYNOW'
+  }
   
+  export enum TableNames {
+    Stripe = 'stripe',
+    Paypal = 'paypal',
+    Paynow = 'paynow'
+}
