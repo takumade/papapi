@@ -99,13 +99,6 @@ export class PaynowLib {
           retries++
         }
 
-        if (transaction.status == "Paid"){
-          // Paid
-        }else{ 
-          // Nope
-        }
-
-
 
         const newPaynowPayment = {
           email: data.email,
