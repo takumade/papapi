@@ -3,6 +3,7 @@ import { Hono } from 'hono'
 import users from './apis/users'
 import auth from './apis/auth'
 import paynow from './apis/paynow'
+import "dotenv/config";  
 
 const app = new Hono()
 
