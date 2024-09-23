@@ -51,7 +51,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('email', 'varchar', (col) => col.notNull())
     .addColumn('phone', 'varchar', (col) => col.notNull())
     .addColumn('method', 'varchar', (col) => col.notNull())
-    .addColumn('items', 'varchar', (col) => col.notNull())
+    .addColumn('items', 'jsonb', (col) => col.notNull())
     .addColumn('amount', 'float8', (col) => col.notNull())
     .addColumn('redirect_url', 'varchar', (col) => col.notNull())
     .addColumn('result_url', 'varchar', (col) => col.notNull())
