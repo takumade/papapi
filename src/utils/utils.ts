@@ -35,3 +35,4 @@ export const pushToWebhook = async (origin: string, type: string, url: string, d
   }
 };
 
+export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
