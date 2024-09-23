@@ -60,16 +60,10 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('status', 'varchar', (col) => col.notNull())
     .execute()
 
-  // Create 'paynow_status_update' table
-  await db.schema
-    .createTable('paynow_status_update')
-    .addColumn('id', 'serial', (col) => col.primaryKey())
-    .addColumn('text', 'varchar', (col) => col.notNull())
-    .execute()
+
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable('paynow_status_update').execute()
   await db.schema.dropTable('paynow').execute()
   await db.schema.dropTable('paypal').execute()
   await db.schema.dropTable('stripe').execute()
