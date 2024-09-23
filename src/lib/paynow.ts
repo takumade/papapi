@@ -1,8 +1,8 @@
-
 import { createTransaction } from '../repositories/transaction';
 import { PaymentMethods, PaymentStatuses } from '../utils/constants';
 import { generateTransactionId, objectHasKeys, pushToWebhook, sleep } from '../utils/utils';
 import { Paynow } from "paynow"
+import { Context } from 'hono';
 
 
 
@@ -14,6 +14,7 @@ export class PaynowLib {
   constructor() {
 
     // Init Paynow 
+    
     this.paynow = new Paynow(
       process.env.PAYNOW_INTEGRATION_ID as string, 
       process.env.PAYNOW_INTEGRATION_KEY as string, 
@@ -31,6 +32,8 @@ export class PaynowLib {
 
 
     console.log('[Create Paynow Payment] Data: ', data);
+    console.log('[Create Paynow Payment] Paynow: ', this.paynow);
+    
 
     const checkKeys = [
       'email',
