@@ -13,9 +13,13 @@ async function migrateToLatest() {
   const db = new Kysely<Database>({
     dialect: new PostgresDialect({
       pool: new Pool({
-        host: 'localhost',
-        database: 'kysely_test',
-      }),
+          database: 'papapi',
+          host: 'localhost',
+          user: 'postgres',
+          password: "password",
+          port: 5432,
+          max: 10,
+        }),
     }),
   })
 

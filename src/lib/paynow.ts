@@ -1,5 +1,7 @@
 
-import { generateTransactionId, objectHasKeys, paymentStatuses, pushToWebhook } from '../utils/utils';
+import { createTransaction } from '../repositories/transaction';
+import { PaymentMethods, PaymentStatuses } from '../utils/constants';
+import { generateTransactionId, objectHasKeys, pushToWebhook, sleep } from '../utils/utils';
 import { Paynow } from "paynow"
 
 
@@ -28,7 +30,7 @@ export class PaynowLib {
 
 
 
-    console.log('Data: ', data);
+    console.log('[Create Paynow Payment] Data: ', data);
 
     const checkKeys = [
       'email',
@@ -84,23 +86,18 @@ export class PaynowLib {
         const pollUrl = response.pollUrl;
         const linkUrl = response?.linkUrl;
         let transaction = await this.paynow.pollTransaction(pollUrl);
-        // let retries = 0
 
-        // while (retries <= 3){
-        //   await sleep(4000)
+        
+        let retries = 0
 
-        //   transaction = await this.paynow.pollTransaction(pollUrl);
+        while (retries <= 3){
+          await sleep(4000)
 
-        //   if (transaction.status == "Paid" || transaction.status == "Cancelled") break          
-        //   retries++
-        // }
+          transaction = await this.paynow.pollTransaction(pollUrl);
 
-        // if (transaction.status == "Paid"){
-        //   // Paid
-        // }else{ 
-        //   // Nope
-        // }
-
+          if (transaction.status == "Paid" || transaction.status == "Cancelled") break          
+          retries++
+        }
 
 
         const newPaynowPayment = {
@@ -124,7 +121,7 @@ export class PaynowLib {
         console.log('Paynow Payment: ', newPaynowPayment);
 
         // @ts-ignore
-        let payment = await createPaynowPaymentAction(newPaynowPayment)
+        let payment = await createTransaction(PaymentMethods.Paynow, newPaynowPayment)
 
         return {
           success: true,
@@ -218,24 +215,23 @@ export class PaynowLib {
 
   private retrievePaynowStatus(status: string) {
     if (status === 'Paid') {
-      status = paymentStatuses.paid;
+      status = PaymentStatuses.Paid;
     } else if (status === 'Cancelled') {
-      status = paymentStatuses.cancelled;
+      status = PaymentStatuses.Cancelled;
     } else if (status === 'Delivered') {
-      status = paymentStatuses.delivered;
+      status = PaymentStatuses.Delivered;
     } else if (status === 'Awaiting Delivery') {
-      status = paymentStatuses.awaitingDelivery;
+      status = PaymentStatuses.AwaitingDelivery;
     } else if (status === 'Awaiting Payment') {
-      status = paymentStatuses.awaitingPayment;
+      status = PaymentStatuses.AwaitingPayment;
     } else if (status === 'Failed') {
-      status = paymentStatuses.failed;
+      status = PaymentStatuses.Failed;
     } else if (status === 'Refunded') {
-      status = paymentStatuses.refunded;
+      status = PaymentStatuses.Refunded;
     } else if (status === 'Disputed') {
-      status = paymentStatuses.disputed;
+      status = PaymentStatuses.Disputed;
     } 
     return status;
   }
 }
-
 
