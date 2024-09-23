@@ -1,16 +1,17 @@
 
 import { db } from '../database'
 import { Paynow, Paypal, Stripe } from '../types'
+import { PaymentMethods, TableNames } from '../utils/constants'
 
 
 function getTableName(type: string) {
     let tableName = ''
-    if (type == "stripe")
-        tableName = "stripe"
-    else if (type == "paynow")
-        tableName = "paynow"
-    else if (type == "paypal")
-        tableName = "paypal"
+    if (type == PaymentMethods.Stripe)
+        tableName = TableNames.Stripe
+    else if (type == PaymentMethods.Paynow)
+        tableName = TableNames.Paynow
+    else if (type == PaymentMethods.Paypal)
+        tableName = TableNames.Paypal
 
     return tableName
 }
@@ -20,7 +21,8 @@ export async function findTransactionById(id: number, type: string) {
     let tableName = getTableName(type)
 
     if (tableName.length > 0)
-        return await db.selectFrom('stripe')
+        // @ts-ignore
+        return await db.selectFrom(tableName)
             .where('id', '=', id)
             .selectAll()
             .executeTakeFirst()
