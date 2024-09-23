@@ -6,7 +6,7 @@ const dialect = new PostgresDialect({
   pool: new Pool({
     database: 'papapi',
     host: 'localhost',
-    user: 'admin',
+    user: 'postgres',
     password: "password",
     port: 5434,
     max: 10,
