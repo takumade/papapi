@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import crypto from 'crypto';
+import { RawBuilder, sql } from 'kysely';
 
 
 export const objectHasKeys = (keys: any[], object: any) => {
@@ -36,3 +37,7 @@ export const pushToWebhook = async (origin: string, type: string, url: string, d
 };
 
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+export function json<T> (object: T): RawBuilder<T> {
+  return sql`cast (${JSON.stringify(object)} as jsonb)`
+}
