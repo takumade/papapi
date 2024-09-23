@@ -13,7 +13,7 @@ function getTableName(type: string) {
     return ''
 }
 
-export async function findTransactionById(id: number, type: string) {
+export async function findTransactionById(id: number, type: PaymentMethods) {
 
     let tableName = getTableName(type)
 
@@ -25,7 +25,7 @@ export async function findTransactionById(id: number, type: string) {
             .executeTakeFirst()
 }
 
-export async function findTransaction(criteria: Partial<Stripe | Paynow | Paypal>, type:string) {
+export async function findTransaction(criteria: Partial<Stripe | Paynow | Paypal>, type:PaymentMethods) {
 
     let tableName:string = getTableName(type)
 
@@ -39,7 +39,7 @@ export async function findTransaction(criteria: Partial<Stripe | Paynow | Paypal
     return await query.selectAll().execute()
 }
 
-export async function updateTransaction(id: number, type: string, updateWith: Paypal | Stripe | Paynow) {
+export async function updateTransaction(id: number, type: PaymentMethods, updateWith: Paypal | Stripe | Paynow) {
     let tableName:string = getTableName(type)
     // @ts-ignore
     await db.updateTable(tableName)
@@ -47,7 +47,7 @@ export async function updateTransaction(id: number, type: string, updateWith: Pa
             .where('id', '=', id).execute()
 }
 
-export async function createTransaction(type:string, transaction: Paypal | Stripe | Paynow) {
+export async function createTransaction(type:PaymentMethods, transaction: Paypal | Stripe | Paynow) {
 
     let tableName:string = getTableName(type)
 
@@ -58,7 +58,7 @@ export async function createTransaction(type:string, transaction: Paypal | Strip
         .executeTakeFirstOrThrow()
 }
 
-export async function deleteTransaction(id: number, type: string) {
+export async function deleteTransaction(id: number, type: PaymentMethods) {
     let tableName:string = getTableName(type)
 
     // @ts-ignore
