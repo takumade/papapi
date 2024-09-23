@@ -1,5 +1,7 @@
 
-import { generateTransactionId, objectHasKeys, paymentStatuses, pushToWebhook } from '../utils/utils';
+import { createTransaction } from '../repositories/transaction';
+import { paymentStatuses } from '../utils/constants';
+import { generateTransactionId, objectHasKeys, pushToWebhook } from '../utils/utils';
 import { Paynow } from "paynow"
 
 
@@ -28,7 +30,7 @@ export class PaynowLib {
 
 
 
-    console.log('Data: ', data);
+    console.log('[Create Paynow Payment] Data: ', data);
 
     const checkKeys = [
       'email',
@@ -124,7 +126,7 @@ export class PaynowLib {
         console.log('Paynow Payment: ', newPaynowPayment);
 
         // @ts-ignore
-        let payment = await createPaynowPaymentAction(newPaynowPayment)
+        let payment = await createTransaction(newPaynowPayment)
 
         return {
           success: true,
