@@ -1,7 +1,7 @@
 
 import { createTransaction } from '../repositories/transaction';
 import { PaymentMethods, PaymentStatuses } from '../utils/constants';
-import { generateTransactionId, objectHasKeys, pushToWebhook } from '../utils/utils';
+import { generateTransactionId, objectHasKeys, pushToWebhook, sleep } from '../utils/utils';
 import { Paynow } from "paynow"
 
 
@@ -86,22 +86,24 @@ export class PaynowLib {
         const pollUrl = response.pollUrl;
         const linkUrl = response?.linkUrl;
         let transaction = await this.paynow.pollTransaction(pollUrl);
-        // let retries = 0
 
-        // while (retries <= 3){
-        //   await sleep(4000)
+        
+        let retries = 0
 
-        //   transaction = await this.paynow.pollTransaction(pollUrl);
+        while (retries <= 3){
+          await sleep(4000)
 
-        //   if (transaction.status == "Paid" || transaction.status == "Cancelled") break          
-        //   retries++
-        // }
+          transaction = await this.paynow.pollTransaction(pollUrl);
 
-        // if (transaction.status == "Paid"){
-        //   // Paid
-        // }else{ 
-        //   // Nope
-        // }
+          if (transaction.status == "Paid" || transaction.status == "Cancelled") break          
+          retries++
+        }
+
+        if (transaction.status == "Paid"){
+          // Paid
+        }else{ 
+          // Nope
+        }
 
 
 
@@ -239,5 +241,4 @@ export class PaynowLib {
     return status;
   }
 }
-
 
