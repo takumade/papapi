@@ -36,10 +36,24 @@ export async function findTransaction(criteria: Partial<Stripe | Paynow | Paypal
         query = query.where('id', '=', criteria.id) // Kysely is immutable, you must re-assign!
     }
 
-    return await query.selectAll().execute()
+    if (criteria.transaction_id) {
+        query = query.where('transaction_id', '=', criteria.transaction_id)
+    }
+
+    if (criteria.invoice) {
+        query = query.where('invoice', '=', criteria.invoice)
+    }
+
+    if (criteria.email) {
+        query = query.where('email', '=', criteria.email)
+    }
+
+
+
+    return await query.selectAll().executeTakeFirst()
 }
 
-export async function updateTransaction(id: number, type: PaymentMethods, updateWith: Paypal | Stripe | Paynow) {
+export async function updateTransaction(id: number, type: PaymentMethods, updateWith: any) {
     let tableName:string = getTableName(type)
     // @ts-ignore
     await db.updateTable(tableName)
