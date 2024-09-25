@@ -33,3 +33,10 @@ export enum PaymentStatuses {
     Paypal = 'paypal',
     Paynow = 'paynow'
 }
+
+export interface PaypalOrder {
+  items: any[]
+  total: string
+  currency: string
+  desc: string
+}
