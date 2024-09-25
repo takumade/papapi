@@ -15,6 +15,7 @@ app.get('/', (c) => {
 app.route('api/users', users)
 app.route('api/auth', auth)
 app.route('api/paynow', paynow)
+app.route('api/paypal', paynow)
 
 
 
