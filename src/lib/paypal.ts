@@ -1,29 +1,28 @@
 
-import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
-import { Application } from '../../declarations';
-import { PayPalStandard, PaypalOrder } from '../../libraries/paypal-standard';
 import { generateTransactionId, paymentStatuses, pushToWebhook } from '../../utils/utils';
+import axios from 'axios';
+import { createTransaction, findTransaction, updateTransaction } from '../repositories/transaction';
+import { json } from '../utils/utils';
+import { PaymentMethods } from '../utils/constants';
+const base = 'https://api-m.sandbox.paypal.com';
 
-export class Paypal extends Service {
+export class Paypal {
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   paypalSettings: any;
-  app: Application;
   returnUrl: string;
   cancelUrl: string;
   paypal: PayPalStandard;
 
-  constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
-    super(options);
-    this.app = app;
+  constructor() {
 
-    this.paypalSettings = this.app.get('paypal');
-    this.returnUrl = this.paypalSettings.returnUrl;
-    this.cancelUrl = this.paypalSettings.cancelUrl;
+    this.returnUrl = process.env.RETURN_URL as string;
+    this.cancelUrl = process.env.CANCEL_URL as string;
 
-    this.paypal = new PayPalStandard(this.paypalSettings.clientId,
-      this.paypalSettings.clientSecret,
-      this.paypalSettings.mode);
+    this.paypal = new PayPalStandard(
+      process.env.PAYPAL_CLIENT_ID as string,
+      process.env.CLIENT_URL as string,
+      process.env.PAYPAL_MODE as string);
   }
 
 
@@ -63,13 +62,17 @@ export class Paypal extends Service {
 
       const order = await this.paypal.createOrder(newOrder);
 
-      await super.create({
-        orderId: order.id,
+      await createTransaction(
+      PaymentMethods.Paypal,
+        {
+        order_id: order.id,
         email: email,
         method: 'paypal - standard',
-        transactionId: generateTransactionId(),
+        transaction_id: generateTransactionId(),
         invoice: 'Invoice ' + new Date().getTime(),
-        items: JSON.stringify(items),
+
+        // @ts-ignore
+        items: json(items),
         amount: total,
         currency: currency,
         description: description,
@@ -87,38 +90,37 @@ export class Paypal extends Service {
     try {
       const captureData = await this.paypal.capturePayment(orderID);
 
-      const sequelize = this.app.get('sequelizeClient');
-      const { paypal } = sequelize.models;
 
-      const transaction = await paypal.findOne({
-        where: {
-          orderId: orderID
-        }
-      });
+      const transaction = await findTransaction(
+        {
+          order_id: orderID
+        },
+        PaymentMethods.Paypal
+      );
 
       if (transaction) {
         const id = transaction.id;
         const status = captureData.status.toLowerCase();
-        const response = await paypal.update({
+        await updateTransaction(
+            id,
+            PaymentMethods.Paypal,
+            {
           status: this.retrievePaynowStatus(status),
-        }, {
-          where: {
-            id: id
-          }
-        });
+             }
+        );
 
         const updatedData = {
           ...transaction,
           status: status
         };
 
-        const webhookUrl = this.app.get('paypal').webhookUrl;
+        // TODO: Implement Webhooks
 
-        pushToWebhook(
-          'papapi',
-          'paypal-status-update',
-          webhookUrl, updatedData
-        );
+        // pushToWebhook(
+        //   'papapi',
+        //   'paypal-status-update',
+        //   webhookUrl, updatedData
+        // );
 
         res.json(captureData);
       }
@@ -141,4 +143,131 @@ export class Paypal extends Service {
       return paymentStatuses.session_created;
     }
   };
+}
+
+
+
+
+
+export interface PaypalOrder {
+  items: any[]
+  total: string
+  currency: string
+  desc: string
+}
+
+
+class PayPalStandard {
+
+  clientId: string;
+  clientSecret: string;
+  mode: string;
+  base: string;
+  headers: any;
+
+  constructor(clientId: string, clientSecret: string, mode: string) {
+
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
+    this.mode = mode;
+
+    if (this.mode === 'sandbox') {
+      this.base = 'https://api-m.sandbox.paypal.com';
+    } else {
+      this.base = 'https://api-m.paypal.com';
+    }
+
+  }
+
+  async checkPayPalAuth() {
+    if (this.headers && Object.keys(this.headers).includes('Authorization')) {
+      return true;
+    } else {
+      let paypalAccessToken = app.get('paypalAccessToken');
+
+      if (!paypalAccessToken) {
+        paypalAccessToken = await this.generateAccessToken();
+      }
+
+      this.headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${paypalAccessToken}`,
+      };
+      return true;
+    }
+  }
+
+  async createOrder(order: PaypalOrder) {
+    await this.checkPayPalAuth();
+    const url = `${base}/v2/checkout/orders`;
+
+    const data:any = {
+      intent: 'CAPTURE',
+      purchase_units: [
+        {
+          amount: {
+            currency_code: order.currency,
+            value: order.total,
+            breakdown: {
+              item_total: { 'currency_code':order.currency, 'value':order.total },
+            }
+          },
+          description: order.desc,
+          items: order.items
+        },
+      ],
+    };
+
+    console.log('Order Data: ', data.purchase_units[0].items);
+
+    try{
+
+      const response = await axios.post(url, data, { headers: this.headers });
+      return this.handleResponse(response);
+    }catch(error:any){
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    }
+  }
+
+  async capturePayment(orderId: any) {
+    await this.checkPayPalAuth();
+    const url = `${base}/v2/checkout/orders/${orderId}/capture`;
+    const response = await axios.post(url, {}, { headers: this.headers });
+    return this.handleResponse(response);
+  }
+
+  async generateAccessToken() {
+    const url = `${base}/v1/oauth2/token`;
+    const auth = Buffer.from(this.clientId + ':' + this.clientSecret).toString('base64');
+    const data = 'grant_type=client_credentials';
+
+    const headers = {
+      Authorization: `Basic ${auth}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    try {
+      const response = await axios.post(url, data, { headers: headers });
+
+      const jsonData: any = await this.handleResponse(response);
+      app.set('paypalAccessToken', jsonData.access_token);
+      return jsonData.access_token;
+    } catch (err) {
+      logger.error('Error Generating Access Token: ', err);
+    }
+  }
+
+  async handleResponse(response: any) {
+    if (response.status === 200 || response.status === 201) {
+      return response.data;
+    }
+
+    const errorMessage = await response.text();
+    throw new Error(errorMessage);
+  }
+
+
+
 }
