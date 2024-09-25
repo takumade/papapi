@@ -1,9 +1,7 @@
 
-import { Id, Params } from '@feathersjs/feathers';
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application } from '../../declarations';
 import { PayPalStandard, PaypalOrder } from '../../libraries/paypal-standard';
-import logger from '../../logger';
 import { generateTransactionId, paymentStatuses, pushToWebhook } from '../../utils/utils';
 
 export class Paypal extends Service {
