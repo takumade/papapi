@@ -1,23 +1,10 @@
 
 import { Hono } from "hono"
-import { PaynowLib } from "../lib/paynow";
-import { PaynowStatus } from "../utils/constants";
 import { Paypal } from "../lib/paypal";
 
 const paypal = new Hono()
 
 
-paypal.post('/', async (c) => {
-  try{
-      let paynow = new PaynowLib()
-      const body = await c.req.json()
-      let response = await paynow.create(body)
-
-      return c.json(response)
-  }catch(error: any){
-    return c.json({status: false,message: "Cannot process request", error: error.message}, 500)
-  }
-})
 
 paypal.post('/orders', async (c) => {
 
