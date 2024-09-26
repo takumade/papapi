@@ -25,7 +25,7 @@ export class Paypal {
     }
 
 
-    createOrder = async (body:any) => {
+    createOrder = async (body: any) => {
         try {
 
 
@@ -78,9 +78,9 @@ export class Paypal {
                     status: PaymentStatuses.SessionCreated,
                 });
 
-            res.json(order);
+            return order
         } catch (err: any) {
-            res.status(500).send(err.message);
+            throw new Error(err);
         }
     };
 
