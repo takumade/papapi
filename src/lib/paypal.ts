@@ -84,8 +84,8 @@ export class Paypal {
         }
     };
 
-    captureOrder = async (req: any, res: any) => {
-        const { orderID } = req.params;
+    captureOrder = async (orderID:string) => {
+        
         try {
             const captureData = await this.paypal.capturePayment(orderID);
 
