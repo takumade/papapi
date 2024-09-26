@@ -34,13 +34,14 @@ paypal.post('/orders', async (c) => {
   }
 })
 
-paypal.post('/orders/:orderId/capture', async (c) => {
+paypal.post('/orders/:order_id/capture', async (c) => {
 
     try{
+
+      const {order_id} = c.req.param()
   
-      const body: PaynowStatus = await c.req.parseBody()   
-      let paynow = new PaynowLib()
-      let response = await paynow.statusUpdate(body)
+      let pp = new Paypal()
+      let response = await pp.captureOrder(order_id)
   
       return c.json(response)
     }catch(error: any){
