@@ -25,11 +25,11 @@ export class Paypal {
     }
 
 
-    createOrder = async (req: any, res: any) => {
+    createOrder = async (body:any) => {
         try {
 
 
-            const { items, description, currency, userId, email } = req.body;
+            const { items, description, currency, userId, email } = body;
 
             let total = 0.0;
 
