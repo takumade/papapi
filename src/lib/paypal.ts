@@ -121,12 +121,12 @@ export class Paypal {
                 //   webhookUrl, updatedData
                 // );
 
-                res.json(captureData);
+                return captureData
             }
 
 
         } catch (err: any) {
-            res.status(500).send(err.message);
+           throw new Error(err);
         }
     };
 
