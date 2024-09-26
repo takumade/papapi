@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { createTransaction, findTransaction, updateTransaction } from '../repositories/transaction';
-import { generateTransactionId, json } from '../utils/utils';
-import { PaymentMethods, PaymentStatuses, PaypalOrder } from '../utils/constants';
+
+import { PaypalOrder } from '../utils/constants';
 const base = 'https://api-m.sandbox.paypal.com';
 
 export class PayPalAPI {
