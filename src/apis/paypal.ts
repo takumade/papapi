@@ -2,6 +2,7 @@
 import { Hono } from "hono"
 import { PaynowLib } from "../lib/paynow";
 import { PaynowStatus } from "../utils/constants";
+import { Paypal } from "../lib/paypal";
 
 const paypal = new Hono()
 
@@ -22,9 +23,9 @@ paypal.post('/orders', async (c) => {
 
   try{
 
-    const body: PaynowStatus = await c.req.parseBody()   
-    let paynow = new PaynowLib()
-    let response = await paynow.statusUpdate(body)
+    const body = await c.req.json()   
+    let pp = new Paypal()
+    let response = await pp.createOrder(body)
 
     return c.json(response)
   }catch(error: any){
