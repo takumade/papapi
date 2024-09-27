@@ -1,6 +1,7 @@
 
 import Stripe from 'stripe';
-import { generateTransactionId, paymentStatuses, pushToWebhook } from '../../utils/utils';
+import { generateTransactionId, pushToWebhook } from '../utils/utils';
+import { PaymentStatuses } from '../utils/constants';
 
 
 export class StripeAPI {
@@ -14,13 +15,13 @@ export class StripeAPI {
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor() {
    
-    this.successUrl = this.stripeSettings.successUrl;
-    this.cancelUrl = this.stripeSettings.cancelUrl;
-    this.webhookUrl = this.stripeSettings.webhookUrl;
-    this.signingSecret = this.stripeSettings.signingSecret;
+    this.successUrl = process.env.STRIPE_SUCCESS_URL as string;
+    this.cancelUrl = process.env.STRIPE_CANCEL_URL as string;
+    this.webhookUrl = process.env.STRIPE_WEBHOOK_URL as string;
+    this.signingSecret = process.env.STRIPE_SIGNING_SECRET as string;
 
-    this.stripe = new Stripe(this.stripeSettings.secretKey, {
-      apiVersion: this.stripeSettings.apiVersion,
+    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+      apiVersion: process.env.STRIPE_API_VERSION as any,
     });
 
 
