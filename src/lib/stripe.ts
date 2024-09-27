@@ -1,7 +1,9 @@
 
 import Stripe from 'stripe';
-import { generateTransactionId, pushToWebhook } from '../utils/utils';
-import { PaymentStatuses } from '../utils/constants';
+import { generateTransactionId, json, pushToWebhook } from '../utils/utils';
+import { PaymentMethods, PaymentStatuses } from '../utils/constants';
+import { createTransaction } from '../repositories/transaction';
+import { StripeTable } from '../types';
 
 
 export class StripeAPI {
@@ -99,36 +101,36 @@ export class StripeAPI {
       const newStripePayment = {
         email: body.email,
         phone: body?.phone,
-        items: JSON.stringify(lineItems),
-        cancelUrl: this.cancelUrl,
-        successUrl: this.successUrl,
+        items: json(lineItems),
+        cancel_url: this.cancelUrl,
+        success_url: this.successUrl,
         invoice: invoiceId,
         method: 'stripe',
-        transactionId: transactionId,
-        sessionId: session.id,
-        session: JSON.stringify(session),
+        transaction_id: transactionId,
+        session_id: session.id,
+        session: json(session),
         amount: totalAmount,
         status: PaymentStatuses.SessionCreated
       };
 
-      await(newStripePayment);
+      await createTransaction(PaymentMethods.Stripe, newStripePayment as any);
 
       console.log('Stripe Payment: ', newStripePayment);      
 
-      res.json({ 
+      return { 
         status: 'Success',
         message: 'Session created successfully!',
         data: session 
-      });
+      };
 
     }catch(e:any){
-      res.json({
+      return {
         status : 'Error',
         message: e.message,
         data: {
           stacktrace: e.stacktrace
         }
-      });
+      }
     }
   };
 
