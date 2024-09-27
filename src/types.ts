@@ -43,8 +43,8 @@ import {
     email: string
     phone: string
     method: string
-    items: string
-    session: string
+    items: JSONColumnType<string[]>
+    session: JSONColumnType<string[]>
     amount: number
     success_url: string
     cancel_url: string
@@ -63,7 +63,7 @@ import {
     currency: string
     email: string
     method: string
-    items: string
+    items: JSONColumnType<string[]>
     amount: number
     status: string
   }
