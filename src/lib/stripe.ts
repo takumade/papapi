@@ -121,16 +121,16 @@ export class StripeAPI {
     }
   };
 
-  webhooks  = async (req:any, res:any) => {
+  webhooks  = async (headers:any, body: any) => {
     console.log('Webhook Recieved! Processing...');
-    const sig = req.headers['stripe-signature'];
+    const sig = headers['stripe-signature'];
     let event: any;
 
     try {
-      event = this.stripe.webhooks.constructEvent(req.body, sig, this.signingSecret);
+      event = this.stripe.webhooks.constructEvent(body, sig, this.signingSecret);
     } catch (err:any) {
       console.log('Error: ', err);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
+      throw new Error(err)
     }
 
 
@@ -140,7 +140,7 @@ export class StripeAPI {
       await this.updateTransaction(sessionId, status);
     }
 
-    res.json({received: true});
+    return {received: true}
 
   };
 
