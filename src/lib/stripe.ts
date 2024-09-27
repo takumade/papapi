@@ -196,7 +196,7 @@ export class StripeAPI {
       paymentStatus = session.payment_status;
 
       if (paymentStatus == 'paid') {
-        status = paymentStatuses.paid;
+        status = PaymentStatuses.Paid;
       }
 
 
