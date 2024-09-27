@@ -1,12 +1,10 @@
-import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
-import { Application } from '../../declarations';
+
 import Stripe from 'stripe';
 import { generateTransactionId, paymentStatuses, pushToWebhook } from '../../utils/utils';
 
 
-export class StripeService extends Service {
+export class StripeAPI {
   stripeSettings: any;
-  app: Application;
   stripe: Stripe;
   successUrl: string;
   cancelUrl: string; 
@@ -14,10 +12,8 @@ export class StripeService extends Service {
   signingSecret: string;
 
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
-  constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
-    super(options);
-    this.app = app;
-    this.stripeSettings = this.app.get('stripe');
+  constructor() {
+   
     this.successUrl = this.stripeSettings.successUrl;
     this.cancelUrl = this.stripeSettings.cancelUrl;
     this.webhookUrl = this.stripeSettings.webhookUrl;
@@ -114,7 +110,7 @@ export class StripeService extends Service {
         status: paymentStatuses.session_created
       };
 
-      await super.create(newStripePayment);
+      await(newStripePayment);
 
       console.log('Stripe Payment: ', newStripePayment);      
 
