@@ -2,7 +2,7 @@ import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application } from '../../declarations';
 import Stripe from 'stripe';
 import { generateTransactionId, paymentStatuses, pushToWebhook } from '../../utils/utils';
-import logger from '../../logger';
+
 
 export class StripeService extends Service {
   stripeSettings: any;
@@ -136,7 +136,7 @@ export class StripeService extends Service {
   };
 
   webhooks  = async (req:any, res:any) => {
-    logger.info('Webhook Recieved! Processing...');
+    console.log('Webhook Recieved! Processing...');
     const sig = req.headers['stripe-signature'];
     let event: any;
 
@@ -186,7 +186,7 @@ export class StripeService extends Service {
       // Send an update
       const webhookUrl = this.app.get('stripe').webhookUrl;
 
-      logger.info('Pusing data to webhook');
+      console.log('Pusing data to webhook');
       pushToWebhook(
         'papapi',
         'stripe-status-update',
@@ -206,7 +206,7 @@ export class StripeService extends Service {
     switch (event.type) {
     case 'checkout.session.completed':
       const session = event.data.object;
-      logger.info('Checkout Session Completed: ', session);
+      console.log('Checkout Session Completed: ', session);
       // Then define and call a function to handle the event checkout.session.completed
       sessionId = session.id;
       paymentStatus = session.payment_status;
@@ -220,17 +220,17 @@ export class StripeService extends Service {
       break;
     case 'payment_intent.canceled':
       paymentIntent = event.data.object;
-      logger.info('Payment Intent Payment Canceled: ', paymentIntent);
+      console.log('Payment Intent Payment Canceled: ', paymentIntent);
       // Then define and call a function to handle the event payment_intent.canceled
       break;
     case 'payment_intent.payment_failed':
       paymentIntent = event.data.object;
-      logger.info('Payment Intent Payment Failed: ', paymentIntent);
+      console.log('Payment Intent Payment Failed: ', paymentIntent);
       // Then define and call a function to handle the event payment_intent.payment_failed
       break;
     case 'payment_intent.succeeded':
       paymentIntent = event.data.object;
-      logger.info('Payment Intent Succeeded: ', paymentIntent);
+      console.log('Payment Intent Succeeded: ', paymentIntent);
       // Then define and call a function to handle the event payment_intent.succeeded
       break;
       // ... handle other event types
