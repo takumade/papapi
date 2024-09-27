@@ -2,7 +2,7 @@
 import Stripe from 'stripe';
 import { generateTransactionId, json, pushToWebhook } from '../utils/utils';
 import { PaymentMethods, PaymentStatuses } from '../utils/constants';
-import { createTransaction } from '../repositories/transaction';
+import { createTransaction, findTransaction, findTransactionById, updateTransaction } from '../repositories/transaction';
 import { StripeTable } from '../types';
 
 
@@ -145,39 +145,37 @@ export class StripeAPI {
   };
 
   updateTransaction = async (sessionId:string, paymentStatus:string) => {
-    const sequelize = this.app.get('sequelizeClient');
-    const { stripe_service } = sequelize.models;
 
-    const transaction = await stripe_service.findOne({
-      where: {
-        sessionId: sessionId
-      }
-    });
+
+    const transaction = await findTransaction({
+        session_id: sessionId
+      },
+      PaymentMethods.Stripe
+    );
 
     
 
     if (transaction) {
       const id = transaction.id;
 
-      await stripe_service.update({
+      await updateTransaction(id, PaymentMethods.Stripe, {
         status: paymentStatus
-      }, {
-        where: {
-          id: id
-        }
       });
 
-      const updatedData = await stripe_service.findByPk(id);
+      const updatedData = await findTransactionById(id, PaymentMethods.Stripe);
 
       // Send an update
-      const webhookUrl = this.app.get('stripe').webhookUrl;
+    //   const webhookUrl = this.app.get('stripe').webhookUrl;
 
-      console.log('Pusing data to webhook');
-      pushToWebhook(
-        'papapi',
-        'stripe-status-update',
-        webhookUrl, updatedData
-      );
+    //   console.log('Pusing data to webhook');
+    //   pushToWebhook(
+    //     'papapi',
+    //     'stripe-status-update',
+    //     webhookUrl, updatedData
+    //   );
+
+
+    return updatedData;
         
     }
   };
