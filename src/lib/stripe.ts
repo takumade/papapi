@@ -53,20 +53,20 @@ export class StripeAPI {
     }
   };
 
-  createPayment = async (req:any, res:any) => {
+  createPayment = async (body:any) => {
 
-    console.log(req.body);
+    console.log(body);
 
     const transactionId = generateTransactionId();
     const invoiceId = 'Invoice ' + new Date().getTime();
     
     if (this.successUrl.length == 0)
-      this.successUrl = req.body.success_url;
+      this.successUrl = body.success_url;
     
     if (this.cancelUrl.length  == 0)
-      this.cancelUrl = req.body.cancel_url;
+      this.cancelUrl = body.cancel_url;
 
-    const items = req.body.items;
+    const items = body.items;
     const lineItems: any[] = [];
     let totalAmount = 0;
 
@@ -97,8 +97,8 @@ export class StripeAPI {
       });
 
       const newStripePayment = {
-        email: req.body.email,
-        phone: req.body?.phone,
+        email: body.email,
+        phone: body?.phone,
         items: JSON.stringify(lineItems),
         cancelUrl: this.cancelUrl,
         successUrl: this.successUrl,
@@ -108,7 +108,7 @@ export class StripeAPI {
         sessionId: session.id,
         session: JSON.stringify(session),
         amount: totalAmount,
-        status: paymentStatuses.session_created
+        status: PaymentStatuses.SessionCreated
       };
 
       await(newStripePayment);
