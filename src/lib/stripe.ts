@@ -121,13 +121,12 @@ export class StripeAPI {
     }
   };
 
-  webhooks  = async (headers:any, body: any) => {
+  webhooks  = async (stripe_signature:string, body: any) => {
     console.log('Webhook Recieved! Processing...');
-    const sig = headers['stripe-signature'];
     let event: any;
 
     try {
-      event = this.stripe.webhooks.constructEvent(body, sig, this.signingSecret);
+      event = this.stripe.webhooks.constructEvent(body, stripe_signature, this.signingSecret);
     } catch (err:any) {
       console.log('Error: ', err);
       throw new Error(err)
