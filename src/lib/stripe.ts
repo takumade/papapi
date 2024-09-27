@@ -44,14 +44,7 @@ export class StripeAPI {
         data: customer
       }
     }catch(e: any){
-      return {
-        status: 'Error',
-        message: e.message,
-        data: {
-          stacktrace: e.stacktrace
-        }
-        
-      }
+      throw new Error(e)
     }
   };
 
@@ -124,13 +117,7 @@ export class StripeAPI {
       };
 
     }catch(e:any){
-      return {
-        status : 'Error',
-        message: e.message,
-        data: {
-          stacktrace: e.stacktrace
-        }
-      }
+      throw new Error(e);
     }
   };
 
