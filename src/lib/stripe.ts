@@ -27,29 +27,29 @@ export class StripeAPI {
 
   }
 
-  createCustomer = async (req:any, res: any) => {
+  createCustomer = async (body:any) => {
     try{
       const customer = await this.stripe.customers.create({
-        email: req.body.email,
-        name: `${req.body.first_name} ${req.body.last_name}`,
-        phone: `${req.body.country_code} ${req.body.phone_no}`,
+        email: body.email,
+        name: `${body.first_name} ${body.last_name}`,
+        phone: `${body.country_code} ${body.phone_no}`,
         description: 'User Account Created'
       });
 
-      res.json({
+     return {
         status: 'Success',
         message: 'Customer created successfully!',
         data: customer
-      });
+      }
     }catch(e: any){
-      res.json({
+      return {
         status: 'Error',
         message: e.message,
         data: {
           stacktrace: e.stacktrace
         }
         
-      });
+      }
     }
   };
 
