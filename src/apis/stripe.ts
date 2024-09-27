@@ -25,13 +25,13 @@ stripe.post('/create-customer', async (c) => {
 })
 
 
-stripe.post('/create-customer', async (c) => {
+stripe.post('/payment', async (c) => {
 
     try{
   
       const body = await c.req.json()   
       let stripeService = new StripeAPI()
-      let response = await stripeService.createCustomer(body)
+      let response = await stripeService.createPayment(body)
   
       return c.json(response)
     }catch(error: any){
