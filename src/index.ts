@@ -4,6 +4,7 @@ import users from './apis/users'
 import auth from './apis/auth'
 import paynow from './apis/paynow'
 import "dotenv/config";  
+import stripe from './apis/stripe'
 
 const app = new Hono()
 
@@ -16,6 +17,7 @@ app.route('api/users', users)
 app.route('api/auth', auth)
 app.route('api/paynow', paynow)
 app.route('api/paypal', paynow)
+app.route('api/stripe', stripe)
 
 
 
