@@ -4,6 +4,10 @@ Papapi is a simple, fast, and powerful microservice for **Paynow, PayPal and Str
 
 Think of it a box that is just responsible for handling payments. You can query the transactions, create new ones, and so on. You can get webhooks for PayPal, Stripe, and Paynow status updates.
 
+| Architecture |
+| ------------ |
+| ![Papapi Architecture](public/images/architecture.png)      |
+
 
 # Table of contents
 - [Papapi](#papapi)
@@ -58,29 +62,25 @@ $ git clone https://github.com/takumade/papapi
 
 ```bash
 $ cd papapi
-$ npm i
+$ pnpm install
 ```
 
-3. Config your environment variables in `config/default.json` and `config/production.json`
+3. Config your environment variables in `.env`
 
-4. Run the server
+4. Setup the database
 
 ```bash
-$ npm run dev
+$ sh setup-db.sh
 ```
+
+NB: You need docker installed to run this script
 
 6. To Start a dev database
    
 ```sh
-$ wasp db start
+$ pnpm dev
 ```
 
-
-If you installed docker as root type this before running `wasp db start`
-
-```sh
-$ su - takunda
-```
 
 ## Add a user
 
@@ -122,10 +122,6 @@ Set the `Authorization` header to the token (accessToken) you got from `/authent
 # Contributing
 My plan is to add the 3 gateways and document them well. Other gateways will be added in future versions. Or If you are stubborn and want to add a new gateway now, please contact me but make sure it doesnt do the same thing as the other gateways.
 
-The last thing I want is end up with a very huge repo with a lot of gateways that does the same thing.
-
-Papapi should be simple and stupid. It should be very good at what it does.
-
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 
@@ -134,6 +130,8 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 # Sponsorship
 If you love Papapi, you can really help us by sponsoring us.
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/takucoder)
 
 
 # Todo
